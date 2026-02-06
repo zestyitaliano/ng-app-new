@@ -1,0 +1,621 @@
+/* ===========================
+   No Gatekeeping Home (scoped)
+   Put this in: src/pages/home.css
+   Wrapper class required: .ng-home
+=========================== */
+
+.ng-home{
+  --bg:#f9fafb;
+  --text:#111827;
+  --muted:#6b7280;
+  --accent:#2563eb;
+
+  --header-bg: rgba(249,250,251,.72);
+  --border: rgba(17,24,39,.12);
+  --shadow: 0 20px 40px -18px rgba(0,0,0,.35);
+  --shadow-soft: 0 12px 30px -16px rgba(0,0,0,.25);
+
+  --radius: 18px;
+  --max: 1800px;
+
+  --gap: 14px;
+  --gap-md: 18px;
+  --gap-lg: 24px;
+
+  --tile-min: 220px;
+
+  min-height: 100vh;
+  font-family:"Syne", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  overflow-x:hidden;
+}
+
+.ng-home *{ box-sizing:border-box; }
+
+.ng-home .sr-only{
+  position:absolute;
+  width:1px;height:1px;
+  padding:0;margin:-1px;
+  overflow:hidden;clip:rect(0,0,0,0);
+  white-space:nowrap;border:0;
+}
+
+/* ---------------------------
+   NAV / MEGA MENU
+---------------------------- */
+.ng-home .site-header{
+  position:fixed;
+  top:0; left:0; right:0;
+  z-index:50;
+}
+
+.ng-home .nav{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding: 12px 14px;
+  background: var(--header-bg);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+}
+
+.ng-home .brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  text-decoration:none;
+  color:var(--text);
+}
+
+.ng-home .brand-mark{
+  width:34px;height:34px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(37,99,235,.95), rgba(37,99,235,.25));
+  box-shadow: var(--shadow-soft);
+}
+
+.ng-home .brand-name{
+  font-weight:800;
+  letter-spacing:-.02em;
+}
+
+.ng-home .nav-links{
+  display:none;
+  gap:18px;
+}
+
+.ng-home .nav-links a{
+  text-decoration:none;
+  color: rgba(17,24,39,.8);
+  font-weight:700;
+  letter-spacing:-.01em;
+}
+.ng-home .nav-links a:hover{ color: rgba(17,24,39,1); }
+
+.ng-home .nav-actions{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.ng-home .tools-button{
+  border:1px solid var(--border);
+  background: rgba(255,255,255,.75);
+  padding: 10px 12px;
+  border-radius: 999px;
+  font-weight:800;
+  cursor:pointer;
+}
+.ng-home .tools-button:hover{ background: rgba(255,255,255,.95); }
+
+.ng-home .nav-toggle{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:44px;height:44px;
+  border:1px solid var(--border);
+  background: rgba(255,255,255,.75);
+  border-radius: 999px;
+  cursor:pointer;
+}
+.ng-home .nav-toggle:hover{ background: rgba(255,255,255,.95); }
+
+.ng-home .burger{
+  width:18px;height:12px;
+  position:relative;
+}
+.ng-home .burger::before,
+.ng-home .burger::after,
+.ng-home .burger{
+  background: transparent;
+}
+.ng-home .burger::before,
+.ng-home .burger::after{
+  content:"";
+  position:absolute;
+  left:0; right:0;
+  height:2px;
+  background: rgba(17,24,39,.9);
+  border-radius:999px;
+}
+.ng-home .burger::before{ top:0; }
+.ng-home .burger::after{ bottom:0; }
+.ng-home .burger span{ display:none; }
+
+@media (min-width: 900px){
+  .ng-home .nav{ padding: 14px 22px; }
+  .ng-home .nav-links{ display:flex; }
+  .ng-home .nav-toggle{ display:none; }
+}
+
+.ng-home .mega{
+  position:absolute;
+  top: 58px;
+  left: 10px;
+  right: 10px;
+  max-width: var(--max);
+  margin: 0 auto;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,.92);
+  backdrop-filter: blur(14px);
+  box-shadow: var(--shadow);
+  overflow:hidden;
+}
+
+.ng-home .mega-inner{ padding: 14px; }
+
+.ng-home .mega-head{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+  padding: 6px 6px 12px 6px;
+}
+
+.ng-home .mega-title{
+  font-weight:900;
+  letter-spacing:-.02em;
+  font-size:18px;
+}
+
+.ng-home .mega-subtitle{
+  color:var(--muted);
+  font-weight:700;
+  font-size:13px;
+  margin-top:4px;
+}
+
+.ng-home .mega-close{
+  border:1px solid var(--border);
+  background: rgba(255,255,255,.8);
+  width:40px;height:40px;
+  border-radius:999px;
+  cursor:pointer;
+}
+.ng-home .mega-close:hover{ background: rgba(255,255,255,1); }
+
+.ng-home .mega-search{
+  padding: 0 6px 12px 6px;
+}
+
+.ng-home .mega-search input{
+  width:100%;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  font-weight:700;
+  outline:none;
+  background: #fff;
+  color: var(--text);
+}
+
+.ng-home .mega-search input:focus{
+  border-color: rgba(37,99,235,.45);
+  box-shadow: 0 0 0 4px rgba(37,99,235,.12);
+}
+
+.ng-home .mega-grid{
+  display:grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  padding: 6px;
+}
+
+.ng-home .mega-group{
+  border: 1px solid rgba(17,24,39,.08);
+  border-radius: 16px;
+  padding: 12px;
+  background: rgba(255,255,255,.6);
+}
+
+.ng-home .mega-group h3{
+  margin:0 0 10px 0;
+  font-size: 13px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color: rgba(17,24,39,.7);
+}
+
+.ng-home .mega-links{
+  display:grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.ng-home .mega-link{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  text-decoration:none;
+  color: rgba(17,24,39,.92);
+  border-radius: 12px;
+  padding: 10px 10px;
+  border: 1px solid rgba(17,24,39,.08);
+  background: rgba(255,255,255,.8);
+  font-weight:800;
+}
+
+.ng-home .mega-link small{
+  color: var(--muted);
+  font-weight:800;
+}
+
+.ng-home .mega-link:hover{
+  background: rgba(255,255,255,1);
+  border-color: rgba(17,24,39,.14);
+}
+
+@media (min-width: 800px){
+  .ng-home .mega{
+    left: 18px;
+    right: 18px;
+    top: 64px;
+  }
+  .ng-home .mega-inner{ padding: 18px; }
+  .ng-home .mega-grid{
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .ng-home .mega-links{
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1200px){
+  .ng-home .mega-grid{
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.ng-home .backdrop{
+  position:fixed;
+  inset:0;
+  background: rgba(0,0,0,.28);
+  z-index:49;
+}
+
+/* ---------------------------
+   SCROLL / HERO / GRID
+---------------------------- */
+.ng-home main.scroll-track{
+  position:relative;
+  height:150vh; /* adjust to taste */
+  width:100%;
+  background:var(--bg);
+}
+
+.ng-home .viewport{
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding-top: 62px; /* space for nav */
+}
+
+/* HERO */
+.ng-home .hero{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding: 24px;
+  transition: opacity 900ms cubic-bezier(.7,0,.3,1),
+              transform 900ms cubic-bezier(.7,0,.3,1),
+              filter 900ms cubic-bezier(.7,0,.3,1);
+  z-index:0;
+}
+
+.ng-home .hero-inner{
+  max-width: 980px;
+}
+
+.ng-home .hero h1{
+  margin:0 0 12px 0;
+  font-weight:900;
+  letter-spacing:-.05em;
+  line-height: .92;
+  font-size: clamp(44px, 7vw, 96px);
+  color:#0b0f17;
+}
+
+.ng-home .hero p{
+  margin:0;
+  font-weight:800;
+  letter-spacing:-.02em;
+  color:var(--muted);
+  font-size: clamp(16px, 2.3vw, 30px);
+}
+
+.ng-home .accent{ color: var(--accent); }
+.ng-home .accent-soft{ color: rgba(37,99,235,.9); }
+
+/* Scroll hint */
+.ng-home .scroll-hint{
+  position:fixed;
+  left:50%;
+  bottom:38px;
+  transform: translateX(-50%);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:10px;
+  color:#9ca3af;
+  transition: opacity 500ms ease, transform 500ms ease;
+  z-index:5;
+}
+
+.ng-home .scroll-hint span{
+  font-size:12px;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  font-weight:900;
+}
+
+.ng-home .scroll-hint .chev{
+  width:22px;height:22px;
+  animation: bounce 1.1s infinite;
+}
+
+@keyframes bounce{
+  0%,100%{ transform: translateY(0); }
+  50%{ transform: translateY(8px); }
+}
+
+/* GRID LAYER */
+.ng-home .grid-layer{
+  position:absolute;
+  inset:0;
+  z-index:10;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  pointer-events:none;
+}
+
+.ng-home .grid-scroll{
+  width:100%;
+  height:100%;
+  overflow:auto;
+  -ms-overflow-style:none;
+  scrollbar-width:none;
+  padding-bottom: 22px;
+}
+.ng-home .grid-scroll::-webkit-scrollbar{ display:none; }
+
+.ng-home .grid-wrap{
+  width:100%;
+  max-width: var(--max);
+  margin:0 auto;
+  padding: 14px;
+}
+
+.ng-home .grid{
+  display:grid;
+  grid-template-columns: 1fr;
+  gap: var(--gap);
+}
+
+@media (min-width: 540px){
+  .ng-home .grid{
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--gap-md);
+  }
+  .ng-home .grid-wrap{ padding: 16px; }
+}
+
+@media (min-width: 900px){
+  .ng-home .grid{
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--gap-lg);
+  }
+  .ng-home .grid-wrap{ padding: 28px; }
+}
+
+/* TILE / ANIMATION */
+.ng-home .tile{
+  width:100%;
+  min-height: var(--tile-min);
+  opacity:0;
+  transform: translateY(12px);
+}
+
+.ng-home.is-open .tile.is-visible{
+  opacity:1;
+  transform:none;
+  animation: fly-in-multi 800ms cubic-bezier(0.2,0.8,0.2,1.0) backwards;
+}
+
+@keyframes fly-in-multi{
+  0%{
+    opacity:0;
+    transform: translate3d(var(--enter-x, 0), var(--enter-y, 100px), 0) scale(0.92);
+    filter: blur(4px);
+  }
+  100%{
+    opacity:1;
+    transform: translate3d(0,0,0) scale(1);
+    filter: blur(0);
+  }
+}
+
+/* Card */
+.ng-home .card{
+  height:100%;
+  width:100%;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  padding: 18px;
+  box-shadow: var(--shadow);
+  border-radius: 0; /* keep sharp like your reference */
+  position:relative;
+  overflow:hidden;
+  text-decoration:none;
+  color:inherit;
+  transition: transform 260ms ease, box-shadow 260ms ease;
+  touch-action: manipulation;
+}
+
+@media (min-width: 540px){
+  .ng-home .card{ padding: 20px; }
+}
+@media (min-width: 900px){
+  .ng-home .card{ padding: 28px; }
+}
+
+.ng-home .card:hover{
+  transform: scale(1.02);
+  box-shadow: 0 28px 60px -18px rgba(0,0,0,.45);
+  z-index:2;
+}
+
+.ng-home .card::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background: rgba(255,255,255,.9);
+  opacity:0;
+  transition: opacity 260ms ease;
+  pointer-events:none;
+}
+.ng-home .card:hover::after{ opacity:.12; }
+
+.ng-home .top-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap: 10px;
+  margin-bottom: 14px;
+  position:relative;
+  z-index:1;
+}
+
+.ng-home .icon{
+  width:48px;height:48px;
+  display:grid;
+  place-items:center;
+  transform-origin: top left;
+  transition: transform 500ms ease;
+}
+.ng-home .card:hover .icon{ transform: scale(1.1) rotate(-3deg); }
+
+.ng-home .arrow{
+  width:38px;height:38px;
+  display:grid;
+  place-items:center;
+  background: rgba(255,255,255,.2);
+  backdrop-filter: blur(6px);
+  opacity:0;
+  transform: translateY(14px);
+  transition: opacity 260ms ease, transform 260ms ease;
+}
+.ng-home .card:hover .arrow{
+  opacity:1;
+  transform: translateY(0);
+}
+
+.ng-home .content{
+  margin-top:auto;
+  position:relative;
+  z-index:1;
+  transition: transform 500ms ease;
+}
+.ng-home .card:hover .content{ transform: translateX(4px); }
+
+.ng-home .content h2{
+  margin:0 0 8px 0;
+  font-weight:900;
+  letter-spacing:-.02em;
+  line-height:1.05;
+  font-size: clamp(18px, 2.1vw, 32px);
+}
+
+.ng-home .content p{
+  margin:0;
+  font-weight:800;
+  opacity:.82;
+  line-height:1.45;
+  font-size: 14px;
+  display:-webkit-box;
+  -webkit-line-clamp:3;
+  -webkit-box-orient: vertical;
+  overflow:hidden;
+}
+
+/* Desktop spans (set via CSS vars on tile style) */
+@media (min-width: 900px){
+  .ng-home .tile{
+    grid-column: span var(--col-span, 1);
+    grid-row: span var(--row-span, 1);
+    min-height: 260px;
+  }
+}
+
+/* OPEN state (wrapper-driven) */
+.ng-home.is-open .hero{
+  opacity:0;
+  filter: blur(10px);
+  transform: scale(.92) translateY(-50px);
+}
+
+.ng-home.is-open .scroll-hint{
+  opacity:0;
+  transform: translateX(-50%) translateY(18px);
+  pointer-events:none;
+}
+
+.ng-home.is-open .grid-layer{
+  pointer-events:auto;
+}
+
+/* ---------------------------
+   PAGE SECTIONS (optional)
+---------------------------- */
+.ng-home .page-section{
+  padding: 80px 16px;
+  border-top: 1px solid rgba(17,24,39,.08);
+}
+
+.ng-home .page-wrap{
+  max-width: 900px;
+  margin:0 auto;
+}
+
+.ng-home .page-wrap h2{
+  margin:0 0 8px 0;
+  letter-spacing:-.02em;
+}
+
+.ng-home .page-wrap p{
+  margin:0;
+  color: var(--muted);
+  font-weight:700;
+}

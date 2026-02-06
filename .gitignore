@@ -1,0 +1,26 @@
+# OS
+.DS_Store
+__MACOSX/
+._*
+
+# deps
+node_modules/
+
+# builds
+dist/
+*.tsbuildinfo
+
+# env
+.env
+.env.local
+.env.*.local
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# editor
+.vscode/
+.idea/

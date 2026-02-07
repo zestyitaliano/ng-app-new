@@ -27,9 +27,19 @@ export default function FontPreview({
     const q = search.trim().toLowerCase();
     if (!q) return convertedFonts;
     return convertedFonts.filter((f) =>
-      (f.originalName || "").toLowerCase().includes(q)
+      (f.filename || "").toLowerCase().includes(q)
     );
   }, [convertedFonts, search]);
+
+  const toFontFile = (font: ConvertedFont): FontFile => ({
+    id: font.id,
+    file: new File([font.blob], font.filename, {
+      type: font.blob?.type || "application/octet-stream",
+    }),
+    previewUrl: null,
+    metadata: null,
+    status: "ready",
+  });
 
   return (
     <div className="space-y-6">
@@ -92,10 +102,7 @@ export default function FontPreview({
             {filtered.map((f) => (
               <FontCard
                 key={f.id}
-                font={f}
-                previewText={previewText}
-                onDownload={() => onDownloadOne(f)}
-                disabled={isBusy}
+                font={toFontFile(f)}
               />
             ))}
           </div>

@@ -12,7 +12,7 @@ export const FontCard: React.FC<Props> = ({ font, onRemove }) => {
       <div className="min-w-0">
         <div className="font-medium truncate">{font.file.name}</div>
         <div className="text-sm text-slate-500">
-          {Math.round(font.file.size / 1024)} KB - {font.file.type || "unknown"}
+          {Math.round(font.file.size / 1024)} KB • {font.file.type || "unknown"}
         </div>
       </div>
 
@@ -29,5 +29,5 @@ export const FontCard: React.FC<Props> = ({ font, onRemove }) => {
   );
 };
 
-// Provide a default export so existing imports don't break
+// Provide a default export so existing imports don’t break
 export default FontCard;

@@ -1,10 +1,19 @@
 declare module "culori" {
-  export type Color = Record<string, unknown>;
+  export type Color = {
+    mode?: string;
+    l?: number;
+    c?: number;
+    h?: number;
+    r?: number;
+    g?: number;
+    b?: number;
+    alpha?: number;
+  } & Record<string, unknown>;
 
-  export function converter(mode: string): (color: unknown) => unknown;
-  export function formatHex(color: unknown): string;
-  export function formatRgb(color: unknown): string;
-  export function formatCss(color: unknown): string;
-  export function wcagContrast(a: unknown, b: unknown): number;
-  export function parse(input: unknown): unknown;
+  export function converter(mode: string): (color: Color | string) => Color;
+  export function formatHex(color: Color): string;
+  export function formatRgb(color: Color): string;
+  export function formatCss(color: Color): string;
+  export function wcagContrast(a: Color, b: Color): number;
+  export function parse(input: string | Color): Color | null;
 }

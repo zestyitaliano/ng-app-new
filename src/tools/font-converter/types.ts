@@ -1,34 +1,22 @@
-export interface FontMetadata {
-  family: string;
-  subfamily: string;
-  fullName: string;
-  version: string;
-  manufacturer?: string;
-  copyright?: string;
-  numGlyphs: number;
-}
+export type FontStatus = "idle" | "ready" | "error";
 
-export type FontFormat = 'ttf' | 'otf' | 'woff' | 'woff2' | 'svg' | 'eot';
+export type FontMetadata = {
+  family?: string;
+  fullName?: string;
+  postscriptName?: string;
+};
 
-export interface ConvertedFile {
-  buffer: ArrayBuffer | Uint8Array | string; // SVG is string, others binary
-  format: FontFormat;
-  fileName: string;
-}
-
-export interface FontFile {
+export type FontFile = {
   id: string;
   file: File;
-  previewUrl: string; // Object URL for CSS usage
+  previewUrl: string | null;
   metadata: FontMetadata | null;
-  status: 'loading' | 'ready' | 'error';
-  errorMsg?: string;
-  parsedFont?: any; // opentype.Font instance
-  selected?: boolean;
-}
+  status: FontStatus;
+};
 
-export enum AiActionType {
-  PAIRINGS = 'PAIRINGS',
-  CSS = 'CSS',
-  VIBE = 'VIBE'
-}
+export type ConvertedFont = {
+  id: string;
+  format: string;
+  blob: Blob;
+  filename: string;
+};

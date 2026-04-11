@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { FontFile, ConvertedFile, FontFormat } from '../types';
 import { convertFont } from '../services/fontService';
-import { Button } from './Button';
+import { Button } from '../../../components/Button';
 import { FileType, Download, Trash2, Type, ChevronDown, ChevronUp, Check } from 'lucide-react';
 import { clsx } from 'clsx';
-import { AiPanel } from './AiPanel';
 
 interface FontCardProps {
   fontFile: FontFile;
@@ -16,6 +15,14 @@ export const FontCard: React.FC<FontCardProps> = ({ fontFile, onRemove, onToggle
   const [expanded, setExpanded] = useState(false);
   const [downloadMenuOpen, setDownloadMenuOpen] = useState(false);
   const [converting, setConverting] = useState(false);
+
+  const toBlobPart = (buffer: ConvertedFile["buffer"]): BlobPart => {
+    if (typeof buffer === "string" || buffer instanceof ArrayBuffer) {
+      return buffer;
+    }
+
+    return new Uint8Array(buffer);
+  };
   
   const handleDownload = async (format: FontFormat) => {
     if (!fontFile.parsedFont) return;
@@ -25,7 +32,7 @@ export const FontCard: React.FC<FontCardProps> = ({ fontFile, onRemove, onToggle
     try {
       const result: ConvertedFile = await convertFont(fontFile.parsedFont, format);
       const mimeType = format === 'svg' ? 'image/svg+xml' : `font/${format}`;
-      const blob = new Blob([result.buffer], { type: mimeType });
+      const blob = new Blob([toBlobPart(result.buffer)], { type: mimeType });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -106,7 +113,7 @@ export const FontCard: React.FC<FontCardProps> = ({ fontFile, onRemove, onToggle
                     variant="secondary" 
                     size="sm" 
                     onClick={() => setDownloadMenuOpen(!downloadMenuOpen)}
-                    loading={converting}
+                    disabled={converting}
                 >
                     <Download className="w-4 h-4 mr-2" /> Convert
                     <ChevronDown className="w-3 h-3 ml-2 opacity-50" />
@@ -172,8 +179,6 @@ export const FontCard: React.FC<FontCardProps> = ({ fontFile, onRemove, onToggle
                 <div className="mt-4 text-gray-400 text-lg">1234567890 &!@#%</div>
              </div>
            </div>
-           
-           <AiPanel metadata={fontFile.metadata} />
         </div>
       )}
     </div>

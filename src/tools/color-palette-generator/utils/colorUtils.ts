@@ -6,10 +6,11 @@ import {
     formatRgb, 
     formatCss, 
     wcagContrast, 
-    parse, 
-    Color as CuloriColor 
+    parse
 } from 'culori';
 import { Color } from '../types';
+
+type CuloriColor = any;
 
 export type HexColor = string;
 

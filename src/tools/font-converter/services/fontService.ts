@@ -8,7 +8,7 @@ import wawoff2 from 'wawoff2';
 // Polyfill Buffer for the browser environment so the libraries work
 (window as any).Buffer = Buffer;
 
-export const parseFontFile = async (file: File): Promise<{ font: opentype.Font; metadata: FontMetadata }> => {
+export const parseFontFile = async (file: File): Promise<{ font: any; metadata: FontMetadata }> => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -47,7 +47,7 @@ export const parseFontFile = async (file: File): Promise<{ font: opentype.Font; 
   });
 };
 
-export const convertFont = async (font: opentype.Font, format: FontFormat): Promise<ConvertedFile> => {
+export const convertFont = async (font: any, format: FontFormat): Promise<ConvertedFile> => {
     // Basic array buffer from opentype (essentially TTF structure)
     const buffer = font.toArrayBuffer();
     const fontName = getFontName(font);
@@ -97,15 +97,45 @@ export const convertFont = async (font: opentype.Font, format: FontFormat): Prom
     };
 };
 
-const getFontName = (font: opentype.Font): string => {
+const getFontName = (font: any): string => {
    const names = font.names as any;
    const family = names.fontFamily?.en || 'font';
    const sub = names.fontSubfamily?.en || 'regular';
    return `${family}-${sub}`.replace(/[^a-zA-Z0-9-_]/g, '-').toLowerCase();
 };
 
+const toBlobPart = (buffer: ConvertedFile["buffer"]): BlobPart => {
+  if (typeof buffer === "string" || buffer instanceof ArrayBuffer) {
+    return buffer;
+  }
+
+  return new Uint8Array(buffer);
+};
+
+export const convertToFormat = async (file: File, format: FontFormat) => {
+  const { font } = await parseFontFile(file);
+  const converted = await convertFont(font, format);
+  const mimeType = format === "svg" ? "image/svg+xml" : `font/${format}`;
+
+  return {
+    blob: new Blob([toBlobPart(converted.buffer)], { type: mimeType }),
+    filename: converted.fileName,
+  };
+};
+
+export const downloadConvertedFont = (blob: Blob, filename: string) => {
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = filename;
+  document.body.appendChild(anchor);
+  anchor.click();
+  anchor.remove();
+  URL.revokeObjectURL(url);
+};
+
 // Helper for SVG generation
-const generateSvgFont = (font: opentype.Font, fontName: string): string => {
+const generateSvgFont = (font: any, fontName: string): string => {
     const unitsPerEm = font.unitsPerEm;
     const ascent = font.ascender;
     const descent = font.descender;
@@ -128,7 +158,7 @@ const generateSvgFont = (font: opentype.Font, fontName: string): string => {
         // For simplicity in this demo, we output raw paths, but robust SVG fonts need Y-flipping.
         
         // Correct way for opentype -> SVG Font path:
-        const pathData = glyph.getPath(0, 0, 72).commands.map(cmd => {
+        glyph.getPath(0, 0, 72).commands.map((cmd: unknown) => {
              // We would manually reconstruct string here to flip Y if needed, 
              // but standard opentype.js .toPathData() is for visual rendering (y-down). 
              // SVG Fonts expect y-up. 

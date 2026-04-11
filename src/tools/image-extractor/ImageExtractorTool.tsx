@@ -1,11 +1,14 @@
 import React, { useMemo, useState } from "react";
 import JSZip from "jszip";
 import type { ExtractedImage } from "./types";
+import { ExtractionStatus } from "./types";
 import { extractImagesFromHtml } from "./utils/extractor";
 import { downloadFile, downloadZip } from "./utils/download";
 import { fetchPageHtmlViaProxy } from "./services/proxyService";
 import { Button } from "../../components/Button";
 import { ImageCard } from "../../components/ImageCard";
+import ToolLayout from "../../components/ToolLayout";
+import { toolMeta } from "./meta";
 
 
 export default function ImageExtractorTool() {
@@ -117,17 +120,8 @@ export default function ImageExtractorTool() {
     status === ExtractionStatus.VALIDATING;
 
   return (
-    <div className="min-h-screen bg-white px-4 py-10">
-      <div className="max-w-6xl mx-auto">
-        <header className="mb-8">
-          <h1 className="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight uppercase">
-            Image Extractor
-          </h1>
-          <p className="mt-3 text-slate-600 text-base sm:text-lg font-medium max-w-3xl">
-            Paste any webpage URL and extract image assets. Select what you want, then download individually or as a ZIP.
-          </p>
-        </header>
-
+    <ToolLayout meta={toolMeta} contentClassName="max-w-6xl">
+      <div>
         <div className="bg-offWhite border-2 border-slate-200 p-5 sm:p-6">
           <div className="flex flex-col sm:flex-row gap-3">
             <input
@@ -173,21 +167,40 @@ export default function ImageExtractorTool() {
             <div className="text-slate-500 text-sm font-medium">
               {status === ExtractionStatus.IDLE ? "No images yet." : "No images found (or blocked)."}
             </div>
-          ) : (
+        ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {images.map((img) => (
-                <ImageCard
+                <div
                   key={img.id}
-                  image={img}
-                  isSelected={!!selectedIds[img.id]}
-                  onToggleSelect={() => toggleSelect(img.id)}
-                  onDownload={() => handleDownloadSingle(img)}
-                />
+                  className={[
+                    "border-2 transition-colors",
+                    selectedIds[img.id] ? "border-primary" : "border-transparent",
+                  ].join(" ")}
+                >
+                  <button
+                    type="button"
+                    onClick={() => toggleSelect(img.id)}
+                    className="block w-full text-left"
+                  >
+                    <ImageCard image={img} />
+                  </button>
+
+                  <div className="mt-2">
+                    <Button
+                      onClick={() => handleDownloadSingle(img)}
+                      variant="outline"
+                      size="md"
+                      className="w-full"
+                    >
+                      Download
+                    </Button>
+                  </div>
+                </div>
               ))}
             </div>
           )}
         </div>
       </div>
-    </div>
+    </ToolLayout>
   );
 }

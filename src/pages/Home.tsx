@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { TOOL_CATALOG, type ToolCardIcon } from "../tools/catalog";
 import "./home.css";
 
 type Tool = {
@@ -13,141 +14,10 @@ type Tool = {
   fg: string;
   col?: number;
   row?: number;
-  icon:
-    | "pipette"
-    | "type"
-    | "scaling"
-    | "file"
-    | "minimize"
-    | "palette"
-    | "grid"
-    | "library"
-    | "graph"
-    | "layout";
+  icon: ToolCardIcon;
 };
 
-const TOOLS: Tool[] = [
-  {
-    id: "color-picker",
-    title: "Color Picker from Image",
-    desc: "Extract exact colors from any photo instantly.",
-    category: "Color",
-    route: "/tools/color-picker",
-    bg: "#1982c4",
-    fg: "#ffffff",
-    col: 2,
-    row: 2,
-    icon: "pipette",
-  },
-  {
-    id: "case-converter",
-    title: "Case Converter",
-    desc: "Transform text casing easily.",
-    category: "Text",
-    route: "/tools/case-converter",
-    bg: "#5dcbf0",
-    fg: "#202c39",
-    col: 1,
-    row: 1,
-    icon: "type",
-  },
-  {
-    id: "proportion-scaler",
-    title: "Proportion Scaler",
-    desc: "Calculate aspect ratios and responsive scaling.",
-    category: "Layout",
-    route: "/tools/proportion-scaler",
-    bg: "#202c39",
-    fg: "#ffffff",
-    col: 1,
-    row: 1,
-    icon: "scaling",
-  },
-  {
-    id: "image-to-text",
-    title: "Image to Text Converter",
-    desc: "OCR extraction for your documents.",
-    category: "Images",
-    route: "/tools/image-to-text",
-    bg: "#8ac926",
-    fg: "#202c39",
-    col: 1,
-    row: 2,
-    icon: "file",
-  },
-  {
-    id: "image-compressor",
-    title: "Image Compressor",
-    desc: "Reduce file size without losing quality.",
-    category: "Images",
-    route: "/tools/image-compressor",
-    bg: "#6a4c93",
-    fg: "#ffffff",
-    col: 1,
-    row: 1,
-    icon: "minimize",
-  },
-  {
-    id: "palette-generator",
-    title: "Color Palette Generator",
-    desc: "Create harmonious color schemes.",
-    category: "Color",
-    route: "/tools/palette-generator",
-    bg: "#ff595e",
-    fg: "#ffffff",
-    col: 2,
-    row: 1,
-    icon: "palette",
-  },
-  {
-    id: "vector-pattern",
-    title: "Vector Pattern Generator",
-    desc: "Seamless geometric backgrounds.",
-    category: "Design",
-    route: "/tools/vector-pattern",
-    bg: "#efefef",
-    fg: "#202c39",
-    col: 1,
-    row: 1,
-    icon: "grid",
-  },
-  {
-    id: "icon-library",
-    title: "SVG Icon Library",
-    desc: "Thousands of open source icons.",
-    category: "Design",
-    route: "/tools/icon-library",
-    bg: "#ffca3a",
-    fg: "#202c39",
-    col: 2,
-    row: 1,
-    icon: "library",
-  },
-  {
-    id: "sitemap-extractor",
-    title: "Site Map Extractor",
-    desc: "Visualize website structure.",
-    category: "SEO",
-    route: "/tools/sitemap-extractor",
-    bg: "#1982c4",
-    fg: "#ffffff",
-    col: 1,
-    row: 1,
-    icon: "graph",
-  },
-  {
-    id: "wireframe-modeler",
-    title: "Wireframe Modeler",
-    desc: "Rapid low-fidelity prototyping.",
-    category: "Layout",
-    route: "/tools/wireframe-modeler",
-    bg: "#ff595e",
-    fg: "#ffffff",
-    col: 1,
-    row: 1,
-    icon: "layout",
-  },
-];
+const TOOLS: Tool[] = TOOL_CATALOG;
 
 function enterVectorForIndex(index: number) {
   let x = 0,

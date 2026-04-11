@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import ToolHeaderLite from '../../components/ToolHeaderLite';
 import { SitemapState } from './types';
 import { fetchRobotsAndRoots, processSitemap, categorizeLinks } from './services/sitemapService';
 import InputForm from './components/InputForm';
 import RobotsViewer from './components/RobotsViewer';
 import LinkCategory from './components/LinkCategory';
 import LoadingStatus from './components/LoadingStatus';
+import { toolMeta } from './meta';
 
 const BATCH_SIZE = 5;
 
@@ -181,7 +183,9 @@ export default function SitemapRobotsExplorerTool() {
   const pendingCount = state.sitemapQueue.length - state.processedSitemaps.length;
 
   return (
-    <div className="min-h-screen bg-brand-gray p-6 font-syne">
+    <div className="min-h-screen bg-brand-gray font-syne">
+      <ToolHeaderLite meta={toolMeta} />
+      <div className="p-6">
       <div className="max-w-7xl mx-auto pt-10 pb-20">
         
         {/* Header */}
@@ -292,6 +296,7 @@ export default function SitemapRobotsExplorerTool() {
       
       {/* Footer Decoration */}
       <div className="fixed bottom-0 left-0 w-full h-4 bg-brand-yellow"></div>
+      </div>
     </div>
   );
 }

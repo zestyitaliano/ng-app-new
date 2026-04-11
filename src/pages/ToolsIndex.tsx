@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { TOOLS } from "../tools/registry";
+import { TOOL_CATALOG } from "../tools/catalog";
 
 export default function ToolsIndex() {
   return (
@@ -10,17 +10,17 @@ export default function ToolsIndex() {
         <p className="text-gray-600">Pick a tool to get started.</p>
 
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {TOOLS.map(({ meta }) => (
+          {TOOL_CATALOG.map((tool) => (
             <Link
-              key={meta.slug}
-              to={`/tools/${meta.slug}`}
+              key={tool.id}
+              to={tool.route}
               className="border rounded-none p-4 hover:bg-offwhite transition"
             >
               <div className="text-xs uppercase tracking-wide text-gray-600">
-                {meta.category}
+                {tool.category}
               </div>
-              <div className="text-lg font-bold">{meta.title}</div>
-              <div className="text-sm text-gray-600">{meta.description}</div>
+              <div className="text-lg font-bold">{tool.title}</div>
+              <div className="text-sm text-gray-600">{tool.desc}</div>
               <div className="mt-3 underline text-sm">Open</div>
             </Link>
           ))}

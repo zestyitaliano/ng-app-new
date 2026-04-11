@@ -1,5 +1,6 @@
 // src/tools/color-picker/ToolComponent.tsx
 import React, { useCallback, useState } from "react";
+import ToolLayout from "../../components/ToolLayout";
 import { ImageUploader } from "./components/ImageUploader";
 import { ColorPickerCanvas } from "./components/ColorPickerCanvas";
 import { ColorInfo } from "./components/ColorInfo";
@@ -20,15 +21,8 @@ export default function ToolComponent() {
   const handleClear = useCallback(() => setSelectedColor(null), []);
 
   return (
-    <div className="min-h-screen p-6">
-      <div className="max-w-6xl mx-auto space-y-6">
-        <header className="space-y-2">
-          <h1 className="text-3xl font-extrabold uppercase tracking-tight">
-            {toolMeta.title}
-          </h1>
-          <p className="text-sm text-slate-600">{toolMeta.description}</p>
-        </header>
-
+    <ToolLayout meta={toolMeta} contentClassName="max-w-6xl">
+      <div className="space-y-6">
         {!imageSrc ? (
           <ImageUploader onImageLoad={handleImageLoad} />
         ) : (
@@ -62,6 +56,6 @@ export default function ToolComponent() {
           </div>
         )}
       </div>
-    </div>
+    </ToolLayout>
   );
 }

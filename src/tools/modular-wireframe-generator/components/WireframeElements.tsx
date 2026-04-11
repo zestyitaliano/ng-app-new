@@ -61,8 +61,12 @@ export const ButtonBlock: React.FC<{ className?: string; variant?: 'primary' | '
 );
 
 // Generic container
-export const Container: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className = '' }) => (
-  <div className={`w-full max-w-6xl mx-auto px-8 ${className}`}>
+export const Container: React.FC<{
+  children: React.ReactNode;
+  className?: string;
+  style?: React.CSSProperties;
+}> = ({ children, className = '', style }) => (
+  <div className={`w-full max-w-6xl mx-auto px-8 ${className}`} style={style}>
     {children}
   </div>
 );

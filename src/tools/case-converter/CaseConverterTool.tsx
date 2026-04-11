@@ -3,7 +3,9 @@ import { Copy, Trash2, ArrowRightLeft } from "lucide-react";
 import { CaseType } from "./types";
 import { convertText } from "./utils/textConverters";
 import { Button } from "../../components/Button";
+import ToolLayout from "../../components/ToolLayout";
 import { Toast } from "../../components/Toast";
+import { toolMeta } from "./meta";
 
 
 export default function CaseConverterTool() {
@@ -66,21 +68,8 @@ export default function CaseConverterTool() {
   const caseButtons = Object.values(CaseType);
 
   return (
-    <div className="min-h-screen bg-white py-8 px-4 sm:px-6 lg:px-8 flex flex-col items-center">
-      {/* Header */}
-      <div className="text-center max-w-2xl mx-auto mb-10">
-        <div className="flex items-center justify-center mb-4">
-          <h1 className="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight uppercase">
-            Case Converter
-          </h1>
-        </div>
-        <p className="text-lg text-slate-600 leading-relaxed font-medium">
-          The Case Converter is the quickest way to update the text case of your copy. Just paste and
-          select your new case to easily convert your text!
-        </p>
-      </div>
-
-      <div className="w-full max-w-6xl space-y-8">
+    <ToolLayout meta={toolMeta} contentClassName="max-w-6xl">
+      <div className="space-y-8">
         {/* Main Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
           {/* Input Area */}
@@ -205,9 +194,8 @@ export default function CaseConverterTool() {
             </Button>
           </div>
         </div>
+        <Toast message={toastMessage} isVisible={showToast} onClose={() => setShowToast(false)} />
       </div>
-
-      <Toast message={toastMessage} isVisible={showToast} onClose={() => setShowToast(false)} />
-    </div>
+    </ToolLayout>
   );
 }

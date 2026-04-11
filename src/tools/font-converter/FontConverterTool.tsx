@@ -5,9 +5,11 @@ import { FontFile, FontFormat, ConvertedFont } from "./types";
 import { convertToFormat, downloadConvertedFont } from "./services/fontService";
 import { downloadAllAsZip } from "./utils/fileUtils";
 
+import ToolLayout from "../../components/ToolLayout";
 import FontUploader from "./components/FontUploader";
 import FontPreview from "./components/FontPreview";
 import SkeletonLoader from "./components/SkeletonLoader";
+import { toolMeta } from "./meta";
 
 const DEFAULT_PREVIEW =
   "The quick brown fox jumps over the lazy dog. 0123456789";
@@ -37,10 +39,9 @@ export default function FontConverterTool() {
     const list: FontFile[] = Array.from(files).map((file) => ({
       id: `${file.name}-${file.size}-${file.lastModified}`,
       file,
-      name: file.name,
-      size: file.size,
-      type: file.type,
-      lastModified: file.lastModified,
+      previewUrl: URL.createObjectURL(file),
+      metadata: null,
+      status: "ready",
     }));
 
     // Merge (avoid duplicates)
@@ -52,6 +53,7 @@ export default function FontConverterTool() {
   };
 
   const handleClearAll = () => {
+    uploadedFonts.forEach((font) => URL.revokeObjectURL(font.previewUrl));
     setUploadedFonts([]);
     setConvertedFonts([]);
     setError(null);
@@ -75,7 +77,7 @@ export default function FontConverterTool() {
 
         results.push({
           id: `${font.id}-${targetFormat}`,
-          originalName: font.name,
+          originalName: font.file.name,
           format: targetFormat,
           blob: converted.blob,
           filename: converted.filename,
@@ -110,19 +112,9 @@ export default function FontConverterTool() {
   );
 
   return (
-    <div className="min-h-screen bg-white p-6">
-      <div className="max-w-6xl mx-auto space-y-6">
-        {/* Header */}
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <h1 className="text-3xl font-black uppercase tracking-tight text-slate-900">
-              Font Converter
-            </h1>
-            <p className="text-slate-600 mt-1">
-              Upload fonts, convert formats, preview, and download individually or as a ZIP.
-            </p>
-          </div>
-
+    <ToolLayout meta={toolMeta} contentClassName="max-w-6xl">
+      <div className="space-y-6">
+        <div className="flex justify-end">
           <button
             onClick={handleClearAll}
             disabled={isConverting || (uploadedFonts.length === 0 && convertedFonts.length === 0)}
@@ -220,6 +212,6 @@ export default function FontConverterTool() {
           />
         </div>
       </div>
-    </div>
+    </ToolLayout>
   );
 }

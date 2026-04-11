@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import ToolHeaderLite from '../../components/ToolHeaderLite';
 import { UTMParameters, SavedLink, CustomParam } from './types';
 import { INITIAL_UTM, Icons } from './constants';
+import { toolMeta } from './meta';
 
 const Tooltip: React.FC<{ text: string }> = ({ text }) => (
   <div className="group relative inline-block ml-1">
@@ -205,7 +207,8 @@ export default function CampaignUrlArchitectTool() {
   }`;
 
   return (
-    <div className="min-h-screen flex flex-col font-syne">
+    <div className="min-h-screen flex flex-col font-syne bg-slate-50">
+      <ToolHeaderLite meta={toolMeta} />
       <header className="bg-white border-b-2 border-primary px-6 py-5 sticky top-0 z-10">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">

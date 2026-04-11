@@ -18,6 +18,8 @@ import {
 import { jsPDF } from 'jspdf';
 import heic2any from 'heic2any';
 import JSZip from 'jszip';
+import ToolLayout from '../../components/ToolLayout';
+import { toolMeta } from './meta';
 
 // Types
 type FileStatus = 'idle' | 'converting' | 'success' | 'error';
@@ -468,16 +470,9 @@ export default function ImageConverterTool() {
   const isSelectionMode = selectedIds.size > 0;
 
   return (
-    <div className="min-h-screen bg-white text-gray-900 pb-20">
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-20">
-        <div className="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Settings className="text-[#1982c4]" size={22} />
-            <div>
-              <h1 className="text-lg font-bold leading-tight">Image Converter</h1>
-              <p className="text-sm text-gray-500 -mt-0.5">Convert images to JPG, PNG, WebP, or PDF</p>
-            </div>
-          </div>
+    <ToolLayout meta={toolMeta} contentClassName="max-w-5xl">
+      <div className="space-y-6 pb-20 text-gray-900">
+        <div className="flex justify-end">
           <div className="hidden sm:flex items-center gap-2 text-xs text-gray-500">
             <span className="inline-flex items-center gap-1">
               <FileIcon size={14} />
@@ -485,9 +480,6 @@ export default function ImageConverterTool() {
             </span>
           </div>
         </div>
-      </header>
-
-      <main className="max-w-5xl mx-auto px-4 pt-6 space-y-6">
         {/* Error */}
         {globalError && (
           <div className="bg-red-50 border border-red-100 text-red-700 px-4 py-3 rounded-none flex items-center gap-2">
@@ -755,7 +747,7 @@ export default function ImageConverterTool() {
              </div>
           )}
         </div>
-      </main>
-    </div>
+      </div>
+    </ToolLayout>
   );
 }

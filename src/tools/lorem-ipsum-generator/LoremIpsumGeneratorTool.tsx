@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import ToolLayout from '../../components/ToolLayout';
 import { GeneratorUnit } from './types';
 import { generateLoremIpsum } from './services/lorem';
 import Controls from './components/Controls';
 import OutputDisplay from './components/OutputDisplay';
+import { toolMeta } from './meta';
 
 export default function LoremIpsumGeneratorTool() {
   const [amount, setAmount] = useState<number>(5);
@@ -27,27 +29,8 @@ export default function LoremIpsumGeneratorTool() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-white font-sans text-slate-900 pb-12">
-      {/* Header */}
-      <header className="bg-white border-b border-slate-200 sticky top-0 z-10">
-        <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-                <div className="w-8 h-8 bg-primary flex items-center justify-center text-white font-bold text-lg">L</div>
-                <h1 className="text-xl font-bold tracking-tight text-slate-900 uppercase">Lorem Ipsum Generator</h1>
-            </div>
-        </div>
-      </header>
-
-      <main className="max-w-5xl mx-auto px-4 py-12">
-        <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-extrabold text-slate-900 mb-4 tracking-tight">
-              GENERATE <span className="text-primary">PLACEHOLDER</span> TEXT
-            </h2>
-            <p className="text-slate-500 text-lg md:text-xl font-medium max-w-2xl mx-auto">
-              Clean, reliable lorem ipsum for your designs.
-            </p>
-        </div>
-
+    <ToolLayout meta={toolMeta} contentClassName="max-w-5xl">
+      <div className="font-sans text-slate-900 pb-12">
         <Controls 
             amount={amount}
             setAmount={setAmount}
@@ -91,11 +74,10 @@ export default function LoremIpsumGeneratorTool() {
                 </div>
             </div>
         </section>
-      </main>
-
-      <footer className="text-center py-8 text-slate-400 text-sm font-medium">
-        &copy; {new Date().getFullYear()} Lorem Ipsum Generator. Open Source.
-      </footer>
-    </div>
+        <footer className="text-center py-8 text-slate-400 text-sm font-medium">
+          &copy; {new Date().getFullYear()} Lorem Ipsum Generator. Open Source.
+        </footer>
+      </div>
+    </ToolLayout>
   );
 }

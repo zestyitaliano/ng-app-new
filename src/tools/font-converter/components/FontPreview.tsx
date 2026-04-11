@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
-import FontCard from "./FontCard";
 import { FontFile, ConvertedFont } from "../types";
+import { Download } from "lucide-react";
 
 type Props = {
   uploadedFonts: FontFile[];
@@ -90,13 +90,31 @@ export default function FontPreview({
         ) : (
           <div className="mt-4 space-y-3">
             {filtered.map((f) => (
-              <FontCard
+              <div
                 key={f.id}
-                font={f}
-                previewText={previewText}
-                onDownload={() => onDownloadOne(f)}
-                disabled={isBusy}
-              />
+                className="flex items-center justify-between gap-4 border border-slate-200 p-4"
+              >
+                <div className="min-w-0 flex-1">
+                  <div className="text-sm font-black text-slate-900 truncate">
+                    {f.originalName}
+                  </div>
+                  <div className="text-xs uppercase tracking-widest text-slate-500 mt-1">
+                    {f.format} • {f.filename}
+                  </div>
+                  <div className="mt-3 text-xl text-slate-900 break-words">
+                    {previewText}
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => onDownloadOne(f)}
+                  disabled={isBusy}
+                  className="shrink-0 inline-flex items-center gap-2 bg-slate-900 text-white px-4 py-3 text-xs font-black uppercase tracking-widest disabled:opacity-50"
+                >
+                  <Download size={14} />
+                  Download
+                </button>
+              </div>
             ))}
           </div>
         )}

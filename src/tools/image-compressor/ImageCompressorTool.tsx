@@ -1,6 +1,8 @@
 import React, { useCallback, useMemo, useState } from "react";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
+import ToolLayout from "../../components/ToolLayout";
+import { toolMeta } from "./meta";
 
 type UploadFile = {
   file: File;
@@ -189,17 +191,8 @@ export default function ImageCompressorTool() {
   }, [compressedImages]);
 
   return (
-    <div className="min-h-screen bg-white px-4 py-10">
-      <div className="max-w-5xl mx-auto">
-        <header className="text-center mb-10">
-          <h1 className="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight uppercase">
-            Image Compressor
-          </h1>
-          <p className="mt-3 text-slate-600 text-base sm:text-lg font-medium">
-            Upload images, compress them, then download individually or as a ZIP.
-          </p>
-        </header>
-
+    <ToolLayout meta={toolMeta} contentClassName="max-w-5xl">
+      <div>
         <div className="bg-offWhite border-2 border-slate-100 p-6 mb-8">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             <div className="flex items-center gap-3">
@@ -367,6 +360,6 @@ export default function ImageCompressorTool() {
           </section>
         )}
       </div>
-    </div>
+    </ToolLayout>
   );
 }

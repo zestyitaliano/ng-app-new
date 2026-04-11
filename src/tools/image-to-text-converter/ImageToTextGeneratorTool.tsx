@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import Header from './components/Header';
+import ToolLayout from '../../components/ToolLayout';
 import DropZone from './components/DropZone';
 import LanguageSelector from './components/LanguageSelector';
 import ProcessingOverlay from './components/ProcessingOverlay';
@@ -7,6 +7,7 @@ import ResultArea from './components/ResultArea';
 import ZoomableImage from './components/ZoomableImage';
 import { recognizeText } from './services/ocrService';
 import { ProcessingStatus, OCRLine } from './types';
+import { toolMeta } from './meta';
 
 export default function ImageToTextGeneratorTool() {
   const [image, setImage] = useState<File | null>(null);
@@ -122,11 +123,9 @@ export default function ImageToTextGeneratorTool() {
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto px-4 py-8 sm:py-12 flex flex-col gap-8">
-      
-      <Header />
-
-      <main className="w-full bg-white rounded-none shadow-xl border border-slate-100 overflow-hidden">
+    <ToolLayout meta={toolMeta} contentClassName="max-w-4xl">
+      <div className="flex flex-col gap-8">
+        <main className="w-full bg-white rounded-none shadow-xl border border-slate-100 overflow-hidden">
         
         {/* Controls Bar */}
         <div className="p-6 bg-offwhite border-b border-slate-100">
@@ -211,15 +210,15 @@ export default function ImageToTextGeneratorTool() {
 
           </div>
         )}
-      </main>
+        </main>
 
-      <footer className="text-center">
-        <p className="text-sm text-slate-500 bg-offwhite inline-block px-4 py-2 rounded-none border border-slate-200 shadow-sm">
-          <span className="mr-2">🔒</span>
-          All text extraction happens locally in your browser. Images are not uploaded or stored.
-        </p>
-      </footer>
-
-    </div>
+        <footer className="text-center">
+          <p className="text-sm text-slate-500 bg-offwhite inline-block px-4 py-2 rounded-none border border-slate-200 shadow-sm">
+            <span className="mr-2">🔒</span>
+            All text extraction happens locally in your browser. Images are not uploaded or stored.
+          </p>
+        </footer>
+      </div>
+    </ToolLayout>
   );
 }

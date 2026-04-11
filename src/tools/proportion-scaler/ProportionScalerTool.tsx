@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import ToolLayout from "../../components/ToolLayout";
 import { DimensionInput } from './components/DimensionInput';
 import { RatioDisplay } from './components/RatioDisplay';
 import { roundValue, isValidNumber } from './utils/math';
+import { toolMeta } from './meta';
 
 // Icons
 const SwapIcon = () => (
@@ -135,23 +137,8 @@ export default function ProportionScalerTool() {
   };
 
   return (
-    <main className="flex flex-col items-center justify-center min-h-screen p-4 sm:p-6 lg:p-8 bg-white">
-      
-      {/* Container */}
-      <div className="w-full max-w-2xl mx-auto">
-        
-        {/* Header */}
-        <header className="text-center mb-10 space-y-4">
-          <h1 className="text-6xl font-black text-brand-500 tracking-tighter uppercase scale-y-75 transform origin-bottom" style={{ fontFamily: 'Syne, sans-serif' }}>
-            SCALER
-          </h1>
-          <p className="text-slate-500 max-w-lg mx-auto leading-relaxed font-medium text-sm">
-            Need to size your work up or down but keep the same aspect ratio? 
-            <br className="hidden sm:block" />
-            Use the Proportion Scaler to easily find and copy your new width or height value!
-          </p>
-        </header>
-
+    <ToolLayout meta={toolMeta} contentClassName="max-w-2xl">
+      <div className="w-full mx-auto">
         {/* Card */}
         <div className="bg-white rounded-none border-2 border-slate-800 overflow-hidden shadow-sm">
           
@@ -307,7 +294,7 @@ export default function ProportionScalerTool() {
                       : 'bg-slate-100 border-transparent text-slate-300 cursor-not-allowed'}
                   `}
                >
-                 {copiedH ? <CheckIcon className="text-white" /> : <CopyIcon />}
+                 {copiedH ? <CheckIcon /> : <CopyIcon />}
                  {copiedH ? 'COPIED' : 'COPY HEIGHT'}
                </button>
              </div>
@@ -318,8 +305,7 @@ export default function ProportionScalerTool() {
         <footer className="mt-12 text-center text-slate-400 text-xs font-semibold tracking-wide">
           &copy; {new Date().getFullYear()} Proportion Scaler. Designed for creators.
         </footer>
-
       </div>
-    </main>
+    </ToolLayout>
   );
 }

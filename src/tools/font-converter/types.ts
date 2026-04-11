@@ -16,6 +16,14 @@ export interface ConvertedFile {
   fileName: string;
 }
 
+export interface ConvertedFont {
+  id: string;
+  originalName: string;
+  format: FontFormat;
+  blob: Blob;
+  filename: string;
+}
+
 export interface FontFile {
   id: string;
   file: File;

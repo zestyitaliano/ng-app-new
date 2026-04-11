@@ -5,6 +5,7 @@ __MACOSX/
 
 # deps
 node_modules/
+.venv/
 
 # builds
 dist/

@@ -1,0 +1,10 @@
+{
+  "slug": "vectorvault",
+  "route": "/tools/vectorvault",
+  "shell": "custom_app",
+  "priority": "medium",
+  "simplification": "stay_custom",
+  "consoleErrors": [],
+  "pageErrors": [],
+  "failedRequests": []
+}

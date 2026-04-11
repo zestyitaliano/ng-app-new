@@ -1,0 +1,10 @@
+{
+  "slug": "image-extractor",
+  "route": "/tools/image-extractor",
+  "shell": "full_layout",
+  "priority": "high",
+  "simplification": "keep",
+  "consoleErrors": [],
+  "pageErrors": [],
+  "failedRequests": []
+}

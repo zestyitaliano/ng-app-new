@@ -1,5 +1,5 @@
 import JSZip from 'jszip';
-import { ExtractedImage } from '../types';
+import type { ExtractedImage } from '../../../types';
 
 export const downloadAsZip = async (images: ExtractedImage[]) => {
   const zip = new JSZip();

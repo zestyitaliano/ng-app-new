@@ -15,9 +15,6 @@ import {
   Loader2,
   StopCircle
 } from 'lucide-react';
-import { jsPDF } from 'jspdf';
-import heic2any from 'heic2any';
-import JSZip from 'jszip';
 import ToolLayout from '../../components/ToolLayout';
 import { toolMeta } from './meta';
 
@@ -42,8 +39,6 @@ const SUPPORTED_INPUTS = {
   'image/png': ['.png'],
   'image/webp': ['.webp'],
   'image/gif': ['.gif'],
-  'image/heic': ['.heic'],
-  'image/heif': ['.heif'],
   'image/avif': ['.avif'],
   'image/tiff': ['.tiff', '.tif'],
   'image/x-adobe-dng': ['.dng', '.raw'],
@@ -60,6 +55,20 @@ const OUTPUT_FORMATS = [
   { value: 'application/pdf', label: 'PDF', ext: 'pdf' },
 ];
 
+let zipLoader: Promise<any> | null = null;
+let pdfLoader: Promise<typeof import('jspdf')> | null = null;
+
+const loadZipLibrary = async () => {
+  zipLoader ??= import('jszip');
+  const module = await zipLoader;
+  return module.default;
+};
+
+const loadPdfLibrary = async () => {
+  pdfLoader ??= import('jspdf');
+  return pdfLoader;
+};
+
 function formatBytes(bytes: number, decimals = 2) {
   if (bytes === 0) return '0 Bytes';
   const k = 1024;
@@ -73,7 +82,6 @@ const getEstimatedSize = (originalSize: number, fileName: string, fileType: stri
   const name = fileName.toLowerCase();
   const type = (fileType || '').toLowerCase();
   
-  const isHeic = name.endsWith('.heic') || name.endsWith('.heif') || type.includes('heic') || type.includes('heif');
   const isPng = name.endsWith('.png') || type.includes('png');
   const isJpg = name.endsWith('.jpg') || name.endsWith('.jpeg') || type.includes('jpeg') || type.includes('jpg');
   const isWebp = name.endsWith('.webp') || type.includes('webp');
@@ -83,12 +91,7 @@ const getEstimatedSize = (originalSize: number, fileName: string, fileType: stri
   
   let multiplier = 1.0;
 
-  if (isHeic) {
-    if (targetFormat === 'image/jpeg') multiplier = 1.5;
-    else if (targetFormat === 'image/png') multiplier = 5.0;
-    else if (targetFormat === 'image/webp') multiplier = 1.2;
-    else if (targetFormat === 'application/pdf') multiplier = 1.5;
-  } else if (isJpg) {
+  if (isJpg) {
     if (targetFormat === 'image/jpeg') multiplier = 1.0;
     else if (targetFormat === 'image/png') multiplier = 2.5;
     else if (targetFormat === 'image/webp') multiplier = 0.8;
@@ -129,20 +132,6 @@ export default function ImageConverterTool() {
 
   const processFile = async (file: File): Promise<string | null> => {
     try {
-      if (file.type === 'image/heic' || file.type === 'image/heif' || file.name.toLowerCase().endsWith('.heic')) {
-        try {
-          // Use slightly lower quality for preview to improve performance
-          const blob = await heic2any({ 
-            blob: file, 
-            toType: "image/jpeg",
-            quality: 0.7 
-          });
-          return URL.createObjectURL(Array.isArray(blob) ? blob[0] : blob);
-        } catch (e) {
-          console.error("HEIC conversion failed for preview", e);
-          return null;
-        }
-      }
       if (file.type.startsWith('image/')) {
         return URL.createObjectURL(file);
       }
@@ -269,25 +258,10 @@ export default function ImageConverterTool() {
   // --- Conversion Logic ---
 
   const convertToImage = async (file: File, targetMime: string): Promise<Blob> => {
-    // Handle HEIC/HEIF conversion first if needed
-    let workingBlob: Blob = file;
-
-    const lowerName = file.name.toLowerCase();
-    const isHeic = file.type === 'image/heic' || file.type === 'image/heif' || lowerName.endsWith('.heic') || lowerName.endsWith('.heif');
-
-    if (isHeic) {
-      const converted = await heic2any({
-        blob: file,
-        toType: targetMime === 'application/pdf' ? 'image/jpeg' : targetMime,
-        quality: 0.95,
-      });
-      workingBlob = Array.isArray(converted) ? converted[0] : converted;
-    }
-
     if (targetMime === 'image/jpeg' || targetMime === 'image/png' || targetMime === 'image/webp') {
       // Convert using canvas for most image types
       const img = new Image();
-      const url = URL.createObjectURL(workingBlob);
+      const url = URL.createObjectURL(file);
       try {
         await new Promise<void>((resolve, reject) => {
           img.onload = () => resolve();
@@ -331,6 +305,7 @@ export default function ImageConverterTool() {
     // Convert image to PDF (single page)
     const imgBlob = await convertToImage(file, 'image/jpeg');
     const imgUrl = URL.createObjectURL(imgBlob);
+    const { jsPDF } = await loadPdfLibrary();
 
     try {
       const img = new Image();
@@ -434,6 +409,7 @@ export default function ImageConverterTool() {
 
     setIsZipping(true);
     try {
+      const JSZip = await loadZipLibrary();
       const zip = new JSZip();
 
       const selectedSuccess = selectedIds.size > 0

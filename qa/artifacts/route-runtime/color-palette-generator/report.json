@@ -1,0 +1,10 @@
+{
+  "slug": "color-palette-generator",
+  "route": "/tools/color-palette-generator",
+  "shell": "custom_app",
+  "priority": "high",
+  "simplification": "stay_custom",
+  "consoleErrors": [],
+  "pageErrors": [],
+  "failedRequests": []
+}

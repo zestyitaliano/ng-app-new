@@ -1,0 +1,10 @@
+{
+  "slug": "font-converter",
+  "route": "/tools/font-converter",
+  "shell": "full_layout",
+  "priority": "high",
+  "simplification": "simplified_keep",
+  "consoleErrors": [],
+  "pageErrors": [],
+  "failedRequests": []
+}

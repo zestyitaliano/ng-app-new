@@ -4,6 +4,6 @@ export const toolMeta = {
   slug: "font-converter",
   title: "Font Converter",
   description:
-    "Convert fonts between TTF, OTF, WOFF, WOFF2, and EOT — individually or in bulk.",
+    "Convert font files in bulk between stable web and desktop formats.",
   category: "Design",
 } satisfies ToolMeta;

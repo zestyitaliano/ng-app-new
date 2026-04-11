@@ -1,4 +1,3 @@
-declare module "heic2any";
 declare module "tinycolor2";
 declare module "culori";
 declare module "opentype.js";

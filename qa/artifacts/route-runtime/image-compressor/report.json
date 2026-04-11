@@ -1,0 +1,10 @@
+{
+  "slug": "image-compressor",
+  "route": "/tools/image-compressor",
+  "shell": "full_layout",
+  "priority": "high",
+  "simplification": "keep",
+  "consoleErrors": [],
+  "pageErrors": [],
+  "failedRequests": []
+}

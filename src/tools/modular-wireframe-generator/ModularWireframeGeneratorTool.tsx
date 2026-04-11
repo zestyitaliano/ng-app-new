@@ -1,7 +1,5 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import html2canvas from 'html2canvas';
-import { jsPDF } from 'jspdf';
 import { SECTION_TYPES, SECTION_STYLE_MAP } from './constants';
 import { SectionData, SectionType } from './types';
 import { WireframeRenderer } from './components/WireframeRenderer';
@@ -17,6 +15,20 @@ const ChevronRightIcon = () => <svg className="w-4 h-4" fill="none" stroke="curr
 const PhotoIcon = () => <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>;
 const DocumentIcon = () => <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>;
 const FileCodeIcon = () => <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>;
+
+let html2canvasLoader: Promise<typeof import('html2canvas')> | null = null;
+let pdfLoader: Promise<typeof import('jspdf')> | null = null;
+
+const loadHtml2canvas = async () => {
+  html2canvasLoader ??= import('html2canvas');
+  const module = await html2canvasLoader;
+  return module.default;
+};
+
+const loadJsPdf = async () => {
+  pdfLoader ??= import('jspdf');
+  return pdfLoader;
+};
 
 export default function ModularWireframeGeneratorTool() {
   // History State Management
@@ -136,6 +148,7 @@ export default function ModularWireframeGeneratorTool() {
     if (!canvasRef.current || sections.length === 0) return;
     setIsExporting(true);
     try {
+      const html2canvas = await loadHtml2canvas();
       const canvas = await html2canvas(canvasRef.current, { 
         useCORS: true, 
         scale: 2,
@@ -157,6 +170,8 @@ export default function ModularWireframeGeneratorTool() {
     if (!canvasRef.current || sections.length === 0) return;
     setIsExporting(true);
     try {
+      const html2canvas = await loadHtml2canvas();
+      const { jsPDF } = await loadJsPdf();
       const canvas = await html2canvas(canvasRef.current, { 
         useCORS: true, 
         scale: 2,

@@ -3,6 +3,7 @@ import { TOOLS as REGISTERED_TOOLS } from "./registry";
 export type ToolCardIcon =
   | "pipette"
   | "type"
+  | "mic"
   | "scaling"
   | "file"
   | "minimize"
@@ -99,6 +100,11 @@ const TOOL_VISUALS: Record<string, ToolVisualConfig> = {
     col: 2,
     row: 2,
   },
+  dictate: {
+    bg: "#ffca3a",
+    fg: "#202c39",
+    icon: "mic",
+  },
   "font-converter": {
     bg: "#ef476f",
     fg: "#ffffff",
@@ -166,6 +172,7 @@ const TOOL_ORDER = [
   "image-converter",
   "image-extractor",
   "font-converter",
+  "dictate",
   "campaign-url-architect",
   "lorem-ipsum-generator",
 ];

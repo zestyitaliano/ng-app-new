@@ -1,5 +1,7 @@
 import React, { Suspense } from "react";
 import { useParams, Link } from "react-router-dom";
+import SiteFooter from "../components/SiteFooter";
+import SiteTopNav from "../components/SiteTopNav";
 import { TOOLS_BY_SLUG } from "../tools/registry";
 
 export default function ToolRoute() {
@@ -9,6 +11,7 @@ export default function ToolRoute() {
   if (!slug || !entry) {
     return (
       <div className="min-h-screen p-6">
+        <SiteTopNav className="-mx-6 -mt-6 mb-6" />
         <div className="max-w-5xl mx-auto space-y-3">
           <h1 className="text-xl font-bold">Tool not found</h1>
           <p className="text-sm text-gray-600">
@@ -27,6 +30,7 @@ export default function ToolRoute() {
 
   return (
     <div className="min-h-screen">
+      <SiteTopNav />
       <Suspense
         fallback={
           <div className="p-6">
@@ -38,6 +42,7 @@ export default function ToolRoute() {
       >
         <Tool />
       </Suspense>
+      <SiteFooter />
     </div>
   );
 }

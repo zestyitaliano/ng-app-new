@@ -8,7 +8,10 @@ interface HeaderProps {
   setAppView: (view: AppView) => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ activeView, setAppView }) => {
+const Header: React.FC<HeaderProps> = ({
+  activeView,
+  setAppView,
+}) => {
   
   // Calculate translate value based on active view
   // We use percentage-based translation relative to the indicator's own width (which is 1/5 of container now)
@@ -24,12 +27,11 @@ const Header: React.FC<HeaderProps> = ({ activeView, setAppView }) => {
   }
 
   return (
-    <header className="w-full p-4 flex flex-col md:flex-row justify-between items-center gap-4 bg-white/90 backdrop-blur-md border-b border-gray-200 sticky top-0 z-20 shadow-sm">
+    <header className="w-full p-4 flex flex-col md:flex-row justify-between items-center gap-4 bg-white/90 backdrop-blur-md border-b border-gray-200 sticky top-[75px] z-20 shadow-sm">
       <h1 className="text-xl md:text-2xl font-bold tracking-wider text-gray-900">
         Color Palette <span className="text-[#1982c4]">Generator</span>
       </h1>
       <div className="flex items-center gap-4">
-        
         {/* Segmented Control - 5 Items */}
         <div className="relative flex bg-gray-100 border border-gray-200 w-[360px] sm:w-[600px] h-10 sm:h-12 shadow-inner rounded-none">
             

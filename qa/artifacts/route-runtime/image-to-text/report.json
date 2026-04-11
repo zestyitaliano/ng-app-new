@@ -1,0 +1,10 @@
+{
+  "slug": "image-to-text",
+  "route": "/tools/image-to-text",
+  "shell": "full_layout",
+  "priority": "high",
+  "simplification": "keep",
+  "consoleErrors": [],
+  "pageErrors": [],
+  "failedRequests": []
+}

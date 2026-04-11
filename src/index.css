@@ -1,21 +1,182 @@
+@import url("https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Minimal global defaults */
-html, body {
-  height: 100%;
+:root {
+  --ng-bg: #ffffff;
+  --ng-panel: #efefef;
+  --ng-panel-strong: #e3e3e3;
+  --ng-text: #111111;
+  --ng-text-muted: rgba(17, 17, 17, 0.72);
+  --ng-primary: #1982c4;
+  --ng-primary-strong: #156a9e;
+  --ng-accent-yellow: #ffca3a;
+  --ng-accent-yellow-strong: #e6b42f;
+  --ng-accent-red: #ff595e;
+  --ng-accent-red-strong: #e14e53;
+  --ng-border: #111111;
+  --ng-border-subtle: #d6d6d6;
+  --ng-focus: rgba(25, 130, 196, 0.18);
+  --ng-shadow-none: none;
+  --ng-radius-none: 0px;
+  --ng-page-max: 1440px;
 }
 
-body {
-  margin: 0;
+@layer base {
+  html,
+  body,
+  #root {
+    min-height: 100%;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    background: var(--ng-bg);
+    color: var(--ng-text);
+    font-family: "Syne", sans-serif;
+    text-rendering: geometricPrecision;
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    border-radius: 0;
+  }
+
+  a,
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  input:focus,
+  select:focus,
+  textarea:focus,
+  button:focus-visible {
+    outline: 2px solid var(--ng-primary);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background: var(--ng-accent-yellow);
+    color: var(--ng-text);
+  }
 }
 
-/* Optional: a safe global font stack.
-   If you want Syne only on the homepage, do NOT set it here.
-   If you want Syne everywhere, you can set it here instead. */
-/*
-body {
-  font-family: "Syne", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+@layer components {
+  .ng-page-shell {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .ng-eyebrow {
+    @apply text-[11px] font-black uppercase tracking-[0.22em];
+    color: var(--ng-text-muted);
+  }
+
+  .ng-card {
+    background: var(--ng-bg);
+    color: var(--ng-text);
+    border: 2px solid var(--ng-border);
+    box-shadow: var(--ng-shadow-none);
+  }
+
+  .ng-card-muted {
+    background: var(--ng-panel);
+    color: var(--ng-text);
+    border: 2px solid var(--ng-border);
+    box-shadow: var(--ng-shadow-none);
+  }
+
+  .ng-panel {
+    @apply p-4 sm:p-5;
+    background: var(--ng-panel);
+    color: var(--ng-text);
+    border: 2px solid var(--ng-border);
+  }
+
+  .ng-input {
+    @apply w-full px-4 py-3 text-sm font-medium transition-colors;
+    background: var(--ng-bg);
+    color: var(--ng-text);
+    border: 2px solid var(--ng-border);
+    box-shadow: none;
+  }
+
+  .ng-input::placeholder {
+    color: var(--ng-text-muted);
+  }
+
+  .ng-input-muted {
+    @apply w-full px-4 py-3 text-sm font-medium transition-colors;
+    background: var(--ng-panel);
+    color: var(--ng-text);
+    border: 2px solid var(--ng-border-subtle);
+    box-shadow: none;
+  }
+
+  .ng-input-muted::placeholder {
+    color: var(--ng-text-muted);
+  }
+
+  .ng-button {
+    @apply inline-flex items-center justify-center px-4 py-2 text-sm font-bold uppercase tracking-[0.14em] transition-colors disabled:cursor-not-allowed disabled:opacity-50;
+    border: 2px solid var(--ng-border);
+    box-shadow: none;
+  }
+
+  .ng-button-primary {
+    background: var(--ng-primary);
+    color: var(--ng-bg);
+  }
+
+  .ng-button-primary:hover {
+    background: var(--ng-primary-strong);
+  }
+
+  .ng-button-secondary {
+    background: var(--ng-accent-yellow);
+    color: var(--ng-text);
+  }
+
+  .ng-button-secondary:hover {
+    background: var(--ng-accent-yellow-strong);
+  }
+
+  .ng-button-outline {
+    background: var(--ng-bg);
+    color: var(--ng-text);
+  }
+
+  .ng-button-outline:hover {
+    background: var(--ng-panel);
+  }
+
+  .ng-button-ghost {
+    @apply inline-flex items-center justify-center px-4 py-2 text-sm font-bold uppercase tracking-[0.14em] transition-colors disabled:cursor-not-allowed disabled:opacity-50;
+    background: transparent;
+    border: 2px solid transparent;
+    color: var(--ng-text-muted);
+  }
+
+  .ng-button-ghost:hover {
+    color: var(--ng-text);
+    background: var(--ng-panel);
+  }
 }
-*/

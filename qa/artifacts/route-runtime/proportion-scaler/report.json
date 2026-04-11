@@ -1,0 +1,10 @@
+{
+  "slug": "proportion-scaler",
+  "route": "/tools/proportion-scaler",
+  "shell": "full_layout",
+  "priority": "high",
+  "simplification": "keep",
+  "consoleErrors": [],
+  "pageErrors": [],
+  "failedRequests": []
+}

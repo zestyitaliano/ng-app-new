@@ -1,0 +1,10 @@
+{
+  "slug": "modular-wireframe-generator",
+  "route": "/tools/modular-wireframe-generator",
+  "shell": "custom_app",
+  "priority": "medium",
+  "simplification": "stay_custom",
+  "consoleErrors": [],
+  "pageErrors": [],
+  "failedRequests": []
+}

@@ -1,0 +1,10 @@
+{
+  "slug": "lorem-ipsum-generator",
+  "route": "/tools/lorem-ipsum-generator",
+  "shell": "full_layout",
+  "priority": "medium",
+  "simplification": "keep",
+  "consoleErrors": [],
+  "pageErrors": [],
+  "failedRequests": []
+}

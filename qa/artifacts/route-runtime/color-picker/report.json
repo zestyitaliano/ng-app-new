@@ -1,0 +1,10 @@
+{
+  "slug": "color-picker",
+  "route": "/tools/color-picker",
+  "shell": "full_layout",
+  "priority": "high",
+  "simplification": "keep",
+  "consoleErrors": [],
+  "pageErrors": [],
+  "failedRequests": []
+}

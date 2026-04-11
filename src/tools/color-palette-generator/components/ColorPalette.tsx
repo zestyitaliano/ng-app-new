@@ -5,11 +5,9 @@ import ColorSwatch from './ColorSwatch';
 import HarmonyVisualizer from './HarmonyVisualizer';
 import ColorWheel from './ColorWheel';
 import ColorDetailsModal from './ColorDetailsModal';
-import { UploadCloudIcon, DownloadIcon, UndoIcon, RedoIcon, ChevronDownIcon, InfoIcon, LockIcon, ColorPickerIcon } from './icons/Icons';
-import { exportAsJson, exportAsSvg, exportAsPdf, exportAsHtml } from '../utils/exportUtils';
+import { DownloadIcon, UndoIcon, RedoIcon, ChevronDownIcon, LockIcon, ColorPickerIcon } from './icons/Icons';
 import { HARMONY_RULES } from '../utils/colorUtils';
 import tinycolor from 'tinycolor2';
-import { motion, AnimatePresence } from 'framer-motion';
 
 interface ColorPaletteProps {
   palette: Color[];
@@ -22,12 +20,7 @@ interface ColorPaletteProps {
   onSetBaseColor: (hex: string | null) => void;
   isCurrentPaletteFavorite: boolean;
   onToggleFavorite: () => void;
-  onExtractFromImage: (file: File) => void;
-  onExtractFromImageUrl: (url: string) => void;
-  isImporting: boolean;
-  importError: string | null;
   onReorderPalette: (newPalette: Color[]) => void;
-  importedImagePreview: string | null;
   onUpdateColor: (index: number, newHex: string) => void;
   canUndo: boolean;
   canRedo: boolean;
@@ -45,8 +38,14 @@ const harmonyDescriptions: { [key: string]: string } = {
     tetrad: 'Four colors arranged into two complementary pairs. Rich and varied.',
     complementary: "Colors from opposite ends of the wheel. High-contrast and energetic.",
     doublecomplementary: "Two pairs of complementary colors. Rich variety.",
-    imported: 'Extracted from an image. Dominant shades from the source.',
 };
+
+const PALETTE_WIPE_KEYFRAMES = `
+@keyframes paletteWipeUp {
+  from { clip-path: inset(0 0 0 0); }
+  to { clip-path: inset(100% 0 0 0); }
+}
+`;
 
 interface DraggableColorItem {
     id: string;
@@ -74,12 +73,7 @@ const StaticSwatch: React.FC<{ color: Color; isSelected: boolean }> = ({ color, 
             )}
 
             {/* Fake Footer */}
-            <motion.div 
-                initial={{ opacity: 1, y: 0 }}
-                animate={{ opacity: 0, y: 20 }}
-                transition={{ duration: 0.2 }}
-                className="flex flex-col items-center gap-3 mt-auto w-full z-10"
-            >
+            <div className="flex flex-col items-center gap-3 mt-auto w-full z-10">
                 <div className="text-center w-full flex flex-col items-center relative mt-2">
                     <div className="flex items-center justify-center gap-2 w-full">
                         <div className={`p-1.5 rounded-full ${isDark ? 'text-white/80' : 'text-black/60'}`}>
@@ -96,7 +90,7 @@ const StaticSwatch: React.FC<{ color: Color; isSelected: boolean }> = ({ color, 
                     Buttons are p-2 with w-5 h-5 icons. 16px padding + 20px icon = 36px height. mt-1 is 4px. 
                 */}
                 <div className="h-[36px] mt-1 w-full opacity-0" />
-            </motion.div>
+            </div>
         </div>
     );
 };
@@ -112,31 +106,23 @@ const ColorPalette: React.FC<ColorPaletteProps> = ({
     onSetBaseColor, 
     isCurrentPaletteFavorite, 
     onToggleFavorite, 
-    onExtractFromImage, 
-    onExtractFromImageUrl, 
-    isImporting, 
-    importError, 
     onReorderPalette, 
-    importedImagePreview, 
     onUpdateColor,
     canUndo,
     canRedo,
     onUndo,
     onRedo,
     isTransitioning,
-    onTransitionComplete
+    onTransitionComplete,
 }) => {
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  
   // Local state for drag reordering
   const [items, setItems] = useState<DraggableColorItem[]>([]);
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
-  
-  const [imageUrl, setImageUrl] = useState('');
   const [isExportMenuOpen, setIsExportMenuOpen] = useState(false);
   const exportMenuRef = useRef<HTMLDivElement>(null);
   const [selectedHarmony, setSelectedHarmony] = useState<string>('random');
   const [selectedColorIndex, setSelectedColorIndex] = useState<number>(0);
+  const [isExporting, setIsExporting] = useState(false);
 
   // State for Modal
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
@@ -174,17 +160,26 @@ const ColorPalette: React.FC<ColorPaletteProps> = ({
       return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleImportClick = () => {
-    fileInputRef.current?.click();
-  };
+  const handleExport = async (
+    exporter: 'json' | 'svg' | 'pdf' | 'html',
+  ) => {
+    setIsExportMenuOpen(false);
+    setIsExporting(true);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      onExtractFromImage(file);
-    }
-    if (e.target) {
-      e.target.value = '';
+    try {
+      const exports = await import('../utils/exportUtils');
+
+      if (exporter === 'json') {
+        exports.exportAsJson(palette);
+      } else if (exporter === 'svg') {
+        exports.exportAsSvg(palette);
+      } else if (exporter === 'pdf') {
+        await exports.exportAsPdf(palette);
+      } else {
+        exports.exportAsHtml(palette);
+      }
+    } finally {
+      setIsExporting(false);
     }
   };
 
@@ -229,19 +224,6 @@ const ColorPalette: React.FC<ColorPaletteProps> = ({
     }
   };
 
-  const handleUrlImport = () => {
-    if (imageUrl.trim() && !isImporting) {
-        onExtractFromImageUrl(imageUrl.trim());
-        setImageUrl('');
-    }
-  };
-  
-  const handleUrlInputKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === 'Enter') {
-          handleUrlImport();
-      }
-  };
-
   const handleGenerateClick = () => {
       if (isTransitioning) return;
       generateNewPalette(selectedHarmony === 'random' ? undefined : selectedHarmony);
@@ -257,6 +239,7 @@ const ColorPalette: React.FC<ColorPaletteProps> = ({
 
   return (
     <div className="flex flex-col lg:flex-row h-full lg:h-[calc(100vh-80px)] w-full bg-white overflow-hidden">
+        <style>{PALETTE_WIPE_KEYFRAMES}</style>
         
         <ColorDetailsModal 
             isOpen={isDetailsModalOpen} 
@@ -314,74 +297,6 @@ const ColorPalette: React.FC<ColorPaletteProps> = ({
                  </div>
             </div>
 
-            {/* 3. Import Section (Bottom) */}
-            <div className="mt-auto pt-2 flex flex-col gap-3">
-                <p className="text-xs uppercase tracking-widest font-bold text-gray-400 text-center mb-1">Import Source</p>
-                
-                {importedImagePreview ? (
-                    <div className="relative w-full h-32 overflow-hidden border border-gray-300 group bg-gray-200">
-                        <img src={importedImagePreview} alt="Imported source" className="w-full h-full object-cover" />
-                        <button 
-                            type="button"
-                            onClick={() => onExtractFromImage(new File([], ''))} // Re-trigger file select logic roughly
-                            className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white font-medium"
-                        >
-                            Replace Image
-                        </button>
-                        {/* Hidden input for replacing */}
-                        <input
-                            type="file"
-                            onChange={handleFileChange}
-                            accept="image/*"
-                            className="absolute inset-0 opacity-0 cursor-pointer"
-                        />
-                    </div>
-                ) : (
-                    <button
-                        type="button"
-                        onClick={handleImportClick}
-                        disabled={isImporting}
-                        className="flex items-center justify-center gap-2 w-full p-3 bg-white text-gray-700 border border-gray-300 hover:border-gray-400 hover:bg-gray-50 shadow-sm transition-all"
-                    >
-                        {isImporting ? (
-                            <span className="text-sm">Processing...</span>
-                        ) : (
-                            <>
-                                <UploadCloudIcon className="w-5 h-5 text-gray-400" />
-                                <span className="text-sm font-medium">Upload Image</span>
-                            </>
-                        )}
-                    </button>
-                )}
-                <input
-                    type="file"
-                    ref={fileInputRef}
-                    onChange={handleFileChange}
-                    accept="image/*"
-                    className="hidden"
-                />
-
-                <div className="relative flex items-center">
-                     <input
-                        type="url"
-                        value={imageUrl}
-                        onChange={(e) => setImageUrl(e.target.value)}
-                        onKeyPress={handleUrlInputKeyPress}
-                        placeholder="Paste image URL..."
-                        className="w-full bg-white border border-gray-300 px-3 py-2 pr-10 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-[#1982c4] focus:ring-1 focus:ring-[#1982c4] transition-all"
-                        disabled={isImporting}
-                    />
-                    <button 
-                        type="button"
-                        onClick={handleUrlImport}
-                        disabled={!imageUrl.trim() || isImporting}
-                        className="absolute right-2 text-[#1982c4] disabled:text-gray-300 hover:text-[#156fba]"
-                    >
-                        <UploadCloudIcon className="w-4 h-4" />
-                    </button>
-                </div>
-                {importError && <p className="text-xs text-red-500 text-center leading-tight">{importError}</p>}
-            </div>
         </div>
 
         {/* --- Center Stage (Palette) --- */}
@@ -428,23 +343,18 @@ const ColorPalette: React.FC<ColorPaletteProps> = ({
                          {previousPalette.map((color, index) => {
                             const isSelected = index === selectedColorIndex;
                             return (
-                                <motion.div 
+                                <div 
                                     key={`${transitionId}-${index}`} 
                                     className="flex-1 h-full min-w-0"
                                     style={{
                                         // Apply selected styles manually to the overlay container to match ColorSwatch state
                                         zIndex: isSelected ? 60 : 51, 
                                         scale: isSelected ? 1.02 : 1,
-                                        boxShadow: isSelected ? "0 20px 25px -5px rgba(0, 0, 0, 0.1)" : "none"
+                                        boxShadow: isSelected ? "0 20px 25px -5px rgba(0, 0, 0, 0.1)" : "none",
+                                        animation: `paletteWipeUp 650ms cubic-bezier(0.22, 1, 0.36, 1) forwards`,
+                                        animationDelay: `${index * 60}ms`,
                                     }}
-                                    initial={{ clipPath: 'inset(0 0 0 0)' }}
-                                    animate={{ clipPath: 'inset(100% 0 0 0)' }}
-                                    transition={{ 
-                                        duration: 0.65, 
-                                        ease: [0.22, 1, 0.36, 1], 
-                                        delay: index * 0.06 
-                                    }}
-                                    onAnimationComplete={() => {
+                                    onAnimationEnd={() => {
                                         // Strictly wait for the LAST element to finish animation
                                         if (index === previousPalette.length - 1) {
                                             // 1. CRITICAL: Force immediate zero opacity via DOM style to mask unmount flicker
@@ -465,7 +375,7 @@ const ColorPalette: React.FC<ColorPaletteProps> = ({
                                     }}
                                 >
                                     <StaticSwatch color={color} isSelected={isSelected} />
-                                </motion.div>
+                                </div>
                             );
                          })}
                     </div>
@@ -578,18 +488,19 @@ const ColorPalette: React.FC<ColorPaletteProps> = ({
                     <button 
                         type="button"
                         onClick={() => setIsExportMenuOpen(!isExportMenuOpen)}
-                        className={`flex items-center justify-center gap-3 w-full p-3 border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 transition-all ${isExportMenuOpen ? 'bg-gray-100 ring-2 ring-gray-200' : ''}`}
+                        disabled={isExporting}
+                        className={`flex items-center justify-center gap-3 w-full p-3 border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 transition-all disabled:opacity-60 ${isExportMenuOpen ? 'bg-gray-100 ring-2 ring-gray-200' : ''}`}
                     >
                         <DownloadIcon className="w-5 h-5 text-gray-500" /> 
-                        <span className="font-medium text-sm">Export Palette</span>
+                        <span className="font-medium text-sm">{isExporting ? 'Exporting...' : 'Export Palette'}</span>
                     </button>
                     
                     {isExportMenuOpen && (
                         <div className="absolute bottom-full left-0 right-0 mb-2 bg-white border border-gray-200 shadow-xl z-20 flex flex-col animate-in fade-in slide-in-from-bottom-2 duration-200">
-                            <button type="button" onClick={() => exportAsJson(palette)} className="px-4 py-3 text-sm text-left hover:bg-gray-50 text-gray-700 transition-colors border-b border-gray-100">JSON Code</button>
-                            <button type="button" onClick={() => exportAsSvg(palette)} className="px-4 py-3 text-sm text-left hover:bg-gray-50 text-gray-700 transition-colors border-b border-gray-100">SVG Image</button>
-                            <button type="button" onClick={() => exportAsPdf(palette)} className="px-4 py-3 text-sm text-left hover:bg-gray-50 text-gray-700 transition-colors border-b border-gray-100">PDF Document</button>
-                            <button type="button" onClick={() => exportAsHtml(palette)} className="px-4 py-3 text-sm text-left hover:bg-gray-50 text-gray-700 transition-colors">HTML Page</button>
+                            <button type="button" onClick={() => void handleExport('json')} className="px-4 py-3 text-sm text-left hover:bg-gray-50 text-gray-700 transition-colors border-b border-gray-100">JSON Code</button>
+                            <button type="button" onClick={() => void handleExport('svg')} className="px-4 py-3 text-sm text-left hover:bg-gray-50 text-gray-700 transition-colors border-b border-gray-100">SVG Image</button>
+                            <button type="button" onClick={() => void handleExport('pdf')} className="px-4 py-3 text-sm text-left hover:bg-gray-50 text-gray-700 transition-colors border-b border-gray-100">PDF Document</button>
+                            <button type="button" onClick={() => void handleExport('html')} className="px-4 py-3 text-sm text-left hover:bg-gray-50 text-gray-700 transition-colors">HTML Page</button>
                         </div>
                     )}
                 </div>

@@ -1,0 +1,10 @@
+{
+  "slug": "campaign-url-architect",
+  "route": "/tools/campaign-url-architect",
+  "shell": "lite_header",
+  "priority": "high",
+  "simplification": "keep_lite_header",
+  "consoleErrors": [],
+  "pageErrors": [],
+  "failedRequests": []
+}

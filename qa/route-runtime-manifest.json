@@ -1,0 +1,197 @@
+[
+  {
+    "slug": "color-picker",
+    "title": "Color Picker",
+    "route": "/tools/color-picker",
+    "shell": "full_layout",
+    "priority": "high",
+    "simplification": "keep",
+    "review_focus": [
+      "upload flow and image reset state",
+      "canvas hover and selected color behavior",
+      "copy interactions and mobile usability"
+    ]
+  },
+  {
+    "slug": "case-converter",
+    "title": "Case Converter",
+    "route": "/tools/case-converter",
+    "shell": "full_layout",
+    "priority": "high",
+    "simplification": "keep",
+    "review_focus": [
+      "empty state guidance",
+      "case button responsiveness",
+      "copy and swap actions"
+    ]
+  },
+  {
+    "slug": "proportion-scaler",
+    "title": "Proportion Scaler",
+    "route": "/tools/proportion-scaler",
+    "shell": "full_layout",
+    "priority": "high",
+    "simplification": "keep",
+    "review_focus": [
+      "ratio math correctness",
+      "copy buttons and disabled states",
+      "mobile layout around dual inputs"
+    ]
+  },
+  {
+    "slug": "image-to-text",
+    "title": "Image to Text",
+    "route": "/tools/image-to-text",
+    "shell": "full_layout",
+    "priority": "high",
+    "simplification": "keep",
+    "review_focus": [
+      "upload and OCR progress states",
+      "clean/original formatting toggle",
+      "error recovery and retry flow"
+    ]
+  },
+  {
+    "slug": "image-compressor",
+    "title": "Image Compressor",
+    "route": "/tools/image-compressor",
+    "shell": "full_layout",
+    "priority": "high",
+    "simplification": "keep",
+    "review_focus": [
+      "batch upload and file removal",
+      "compression results and savings accuracy",
+      "single download vs zip download flow"
+    ]
+  },
+  {
+    "slug": "color-palette-generator",
+    "title": "Color Palette Generator",
+    "route": "/tools/color-palette-generator",
+    "shell": "custom_app",
+    "priority": "high",
+    "simplification": "stay_custom",
+    "review_focus": [
+      "palette generation and multi-view navigation",
+      "favorites and local persistence",
+      "whether dense subfeatures should be split or trimmed"
+    ]
+  },
+  {
+    "slug": "vectorvault",
+    "title": "Vector Vault",
+    "route": "/tools/vectorvault",
+    "shell": "custom_app",
+    "priority": "medium",
+    "simplification": "stay_custom",
+    "review_focus": [
+      "search and filtering",
+      "editor side panel behavior",
+      "admin upload flow and modal stacking"
+    ]
+  },
+  {
+    "slug": "sitemap-robots-explorer",
+    "title": "Sitemap Robots Explorer",
+    "route": "/tools/sitemap-robots-explorer",
+    "shell": "lite_header",
+    "priority": "high",
+    "simplification": "keep_lite_header",
+    "review_focus": [
+      "scan progress clarity",
+      "category expansion and pause/continue behavior",
+      "whether this can be simplified into fewer panels"
+    ]
+  },
+  {
+    "slug": "modular-wireframe-generator",
+    "title": "Modular Wireframe Generator",
+    "route": "/tools/modular-wireframe-generator",
+    "shell": "custom_app",
+    "priority": "medium",
+    "simplification": "stay_custom",
+    "review_focus": [
+      "section add/reorder/delete flow",
+      "export image/pdf actions",
+      "whether the control rail needs a lighter app header later"
+    ]
+  },
+  {
+    "slug": "image-converter",
+    "title": "Image Converter",
+    "route": "/tools/image-converter",
+    "shell": "full_layout",
+    "priority": "high",
+    "simplification": "keep",
+    "review_focus": [
+      "drag/drop and multi-file flow",
+      "batch conversion progress and cancel behavior",
+      "download selected/all actions"
+    ]
+  },
+  {
+    "slug": "image-extractor",
+    "title": "Image Extractor",
+    "route": "/tools/image-extractor",
+    "shell": "full_layout",
+    "priority": "high",
+    "simplification": "keep",
+    "review_focus": [
+      "URL fetch behavior and failures",
+      "selection state around result cards",
+      "zip download and per-image download"
+    ]
+  },
+  {
+    "slug": "font-converter",
+    "title": "Font Converter",
+    "route": "/tools/font-converter",
+    "shell": "full_layout",
+    "priority": "high",
+    "simplification": "simplified_keep",
+    "review_focus": [
+      "upload/convert/download path",
+      "stable format support only",
+      "batch summary and converted file list clarity"
+    ]
+  },
+  {
+    "slug": "dictate",
+    "title": "Dictate",
+    "route": "/tools/dictate",
+    "shell": "full_layout",
+    "priority": "high",
+    "simplification": "keep",
+    "review_focus": [
+      "microphone permission and browser support messaging",
+      "transcript editing and undo/redo behavior",
+      "copy and text-to-speech controls"
+    ]
+  },
+  {
+    "slug": "campaign-url-architect",
+    "title": "Campaign URL Architect",
+    "route": "/tools/campaign-url-architect",
+    "shell": "lite_header",
+    "priority": "high",
+    "simplification": "keep_lite_header",
+    "review_focus": [
+      "form validation clarity",
+      "generated URL and history usability",
+      "whether the left/right split is more complex than needed"
+    ]
+  },
+  {
+    "slug": "lorem-ipsum-generator",
+    "title": "Lorem Ipsum Generator",
+    "route": "/tools/lorem-ipsum-generator",
+    "shell": "full_layout",
+    "priority": "medium",
+    "simplification": "keep",
+    "review_focus": [
+      "generated output controls",
+      "copy/clear behavior",
+      "whether the explanatory section still earns its space"
+    ]
+  }
+]

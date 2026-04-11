@@ -1,0 +1,10 @@
+{
+  "slug": "image-converter",
+  "route": "/tools/image-converter",
+  "shell": "full_layout",
+  "priority": "high",
+  "simplification": "keep",
+  "consoleErrors": [],
+  "pageErrors": [],
+  "failedRequests": []
+}

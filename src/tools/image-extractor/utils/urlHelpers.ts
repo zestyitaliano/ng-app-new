@@ -1,4 +1,4 @@
-import { ExtractedImage } from '../types';
+import type { ExtractedImage } from '../../../types';
 
 export const normalizeUrl = (input: string): string => {
   let url = input.trim();

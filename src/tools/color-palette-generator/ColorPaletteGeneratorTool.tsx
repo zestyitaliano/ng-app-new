@@ -1,15 +1,13 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { Suspense, lazy, useState, useEffect, useCallback, useRef } from 'react';
 import { Color, AppView } from './types';
 import { generatePalette, createColorObject } from './utils/colorUtils';
-import { extractPaletteFromImage as extractPaletteFromImageService } from './services/geminiService';
 import Header from './components/Header';
 import ColorPalette from './components/ColorPalette';
-import MockupVisualizer from './components/MockupVisualizer';
-import FavoritesPanel from './components/FavoritesPanel';
-import AccountModal from './components/AccountModal';
-import TrendingPage from './components/TrendingPage';
-import GradientPage from './components/GradientPage';
-import ImageRecolorPage from './components/ImageRecolorPage';
+
+const MockupVisualizer = lazy(() => import('./components/MockupVisualizer'));
+const TrendingPage = lazy(() => import('./components/TrendingPage'));
+const GradientPage = lazy(() => import('./components/GradientPage'));
+const ImageRecolorPage = lazy(() => import('./components/ImageRecolorPage'));
 
 interface HistoryState {
   palette: Color[];
@@ -22,19 +20,11 @@ export default function ColorPaletteGeneratorTool() {
   const [appView, setAppView] = useState<AppView>(AppView.Palette);
   const [baseColorForContrast, setBaseColorForContrast] = useState<string | null>(null);
   const [favoritePalettes, setFavoritePalettes] = useState<string[][]>([]);
-  const [isFavoritesPanelOpen, setIsFavoritesPanelOpen] = useState(false);
-  const [isImporting, setIsImporting] = useState<boolean>(false);
-  const [importError, setImportError] = useState<string | null>(null);
-  const [importedImagePreview, setImportedImagePreview] = useState<string | null>(null);
   
   // Transition State for Shutter Effect
   const [previousPalette, setPreviousPalette] = useState<Color[]>([]);
   const [transitionId, setTransitionId] = useState<number>(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
-  
-  // Account State
-  const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
-  const [user, setUser] = useState<{ email: string } | null>(null);
 
   // Undo/Redo State
   const [past, setPast] = useState<HistoryState[]>([]);
@@ -49,10 +39,6 @@ export default function ColorPaletteGeneratorTool() {
       if (savedFavorites) {
         setFavoritePalettes(JSON.parse(savedFavorites));
       }
-      const savedUser = localStorage.getItem('userSession');
-      if (savedUser) {
-          setUser(JSON.parse(savedUser));
-      }
     } catch (e) {
       console.error("Failed to load local storage data", e);
     }
@@ -66,14 +52,6 @@ export default function ColorPaletteGeneratorTool() {
       console.error("Failed to save favorite palettes", e);
     }
   }, [favoritePalettes]);
-  
-  useEffect(() => {
-      if (user) {
-          localStorage.setItem('userSession', JSON.stringify(user));
-      } else {
-          localStorage.removeItem('userSession');
-      }
-  }, [user]);
 
   // Helper to update state with history tracking
   const updatePaletteState = useCallback((newPalette: Color[], newHarmony: string | null, skipHistory: boolean = false) => {
@@ -142,7 +120,6 @@ export default function ColorPaletteGeneratorTool() {
         const { palette: newPalette, harmony: newHarmony } = generatePalette(palette, specificHarmony);
         updatePaletteState(newPalette, newHarmony);
         setBaseColorForContrast(null); 
-        setImportedImagePreview(null);
     });
   }, [palette, updatePaletteState, animatePaletteUpdate]);
 
@@ -196,59 +173,6 @@ export default function ColorPaletteGeneratorTool() {
     }
   };
 
-  const handleExtractFromImage = async (file: File) => {
-      if (!file) return;
-      setIsImporting(true);
-      setImportError(null);
-      try {
-          const reader = new FileReader();
-          reader.onloadend = async () => {
-              const base64Data = (reader.result as string).split(',')[1];
-              const mimeType = file.type;
-              setImportedImagePreview(reader.result as string);
-              
-              const hexColors = await extractPaletteFromImageService({ data: base64Data, mimeType });
-              
-              animatePaletteUpdate(() => {
-                  const newPaletteColors = hexColors.map(hex => createColorObject(hex));
-                  updatePaletteState(newPaletteColors, 'imported');
-              });
-              setAppView(AppView.Palette);
-          };
-          reader.readAsDataURL(file);
-      } catch (err) {
-          setImportError("Failed to extract colors.");
-          console.error(err);
-      } finally {
-          setIsImporting(false);
-      }
-  };
-
-  const handleExtractFromImageUrl = async (url: string) => {
-      setIsImporting(true);
-      setImportError(null);
-      try {
-          const response = await fetch(url);
-          const blob = await response.blob();
-          const reader = new FileReader();
-          reader.onloadend = async () => {
-               const base64Data = (reader.result as string).split(',')[1];
-               setImportedImagePreview(reader.result as string);
-               const hexColors = await extractPaletteFromImageService({ data: base64Data, mimeType: blob.type });
-               animatePaletteUpdate(() => {
-                  const newPaletteColors = hexColors.map(hex => createColorObject(hex));
-                  updatePaletteState(newPaletteColors, 'imported');
-              });
-              setAppView(AppView.Palette);
-          };
-          reader.readAsDataURL(blob);
-      } catch (e) {
-          setImportError("Could not load image from URL");
-      } finally {
-          setIsImporting(false);
-      }
-  };
-
   const handleReorderPalette = (newPalette: Color[]) => {
        updatePaletteState(newPalette, harmony);
   };
@@ -263,18 +187,11 @@ export default function ColorPaletteGeneratorTool() {
       }
   };
   
-  const loadFavorite = (favPalette: string[]) => {
-      animatePaletteUpdate(() => {
-          const newColors = favPalette.map(hex => createColorObject(hex));
-          updatePaletteState(newColors, null);
-      });
-      setAppView(AppView.Palette);
-      setIsFavoritesPanelOpen(false);
-  };
-  
-  const deleteFavorite = (favPalette: string[]) => {
-      setFavoritePalettes(prev => prev.filter(p => JSON.stringify(p) !== JSON.stringify(favPalette)));
-  };
+  const viewFallback = (
+    <div className="flex flex-1 items-center justify-center bg-gray-50 py-20 text-sm font-medium text-gray-500">
+      Loading workspace...
+    </div>
+  );
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col font-sans text-gray-900">
@@ -296,12 +213,7 @@ export default function ColorPaletteGeneratorTool() {
                 onSetBaseColor={setBaseColorForContrast}
                 isCurrentPaletteFavorite={favoritePalettes.some(p => JSON.stringify(p) === JSON.stringify(palette.map(c => c.hex)))}
                 onToggleFavorite={handleToggleFavorite}
-                onExtractFromImage={handleExtractFromImage}
-                onExtractFromImageUrl={handleExtractFromImageUrl}
-                isImporting={isImporting}
-                importError={importError}
                 onReorderPalette={handleReorderPalette}
-                importedImagePreview={importedImagePreview}
                 onUpdateColor={handleUpdateColor}
                 canUndo={past.length > 0}
                 canRedo={future.length > 0}
@@ -313,52 +225,44 @@ export default function ColorPaletteGeneratorTool() {
         )}
         
         {appView === AppView.Image && (
-             <MockupVisualizer palette={palette} />
+            <Suspense fallback={viewFallback}>
+              <MockupVisualizer palette={palette} />
+            </Suspense>
         )}
 
         {appView === AppView.Trending && (
-            <TrendingPage onLoadPalette={(colors) => {
-                animatePaletteUpdate(() => {
-                    const newPalette = colors.map(hex => createColorObject(hex));
-                    updatePaletteState(newPalette, 'trending');
-                    setAppView(AppView.Palette);
-                });
-            }} />
+            <Suspense fallback={viewFallback}>
+              <TrendingPage onLoadPalette={(colors) => {
+                  animatePaletteUpdate(() => {
+                      const newPalette = colors.map(hex => createColorObject(hex));
+                      updatePaletteState(newPalette, 'trending');
+                      setAppView(AppView.Palette);
+                  });
+              }} />
+            </Suspense>
         )}
 
         {appView === AppView.Gradients && (
-            <GradientPage 
-                onLoadPalette={(colors) => {
-                    animatePaletteUpdate(() => {
-                        const newPalette = colors.map(hex => createColorObject(hex));
-                        updatePaletteState(newPalette, 'gradient');
-                        setAppView(AppView.Palette);
-                    });
-                }} 
-                currentPalette={palette.map(c => c.hex)}
-            />
+            <Suspense fallback={viewFallback}>
+              <GradientPage 
+                  onLoadPalette={(colors) => {
+                      animatePaletteUpdate(() => {
+                          const newPalette = colors.map(hex => createColorObject(hex));
+                          updatePaletteState(newPalette, 'gradient');
+                          setAppView(AppView.Palette);
+                      });
+                  }} 
+                  currentPalette={palette.map(c => c.hex)}
+              />
+            </Suspense>
         )}
 
         {appView === AppView.ImageRecolor && (
-            <ImageRecolorPage currentPalette={palette.map(c => c.hex)} />
+            <Suspense fallback={viewFallback}>
+              <ImageRecolorPage currentPalette={palette.map(c => c.hex)} />
+            </Suspense>
         )}
       </main>
-
-      <FavoritesPanel 
-        isOpen={isFavoritesPanelOpen} 
-        onClose={() => setIsFavoritesPanelOpen(false)}
-        palettes={favoritePalettes}
-        onSelect={loadFavorite}
-        onDelete={deleteFavorite}
-      />
-
-      <AccountModal
-        isOpen={isAccountModalOpen}
-        onClose={() => setIsAccountModalOpen(false)}
-        user={user}
-        onLogin={(email) => setUser({ email })}
-        onLogout={() => setUser(null)}
-      />
     </div>
   );
 }

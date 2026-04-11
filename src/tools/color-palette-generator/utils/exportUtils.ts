@@ -1,5 +1,4 @@
 import { Color } from '../types';
-import { jsPDF } from 'jspdf';
 import tinycolor from 'tinycolor2';
 
 const triggerDownload = (content: string, fileName: string, mimeType: string) => {
@@ -97,8 +96,9 @@ export const exportAsHtml = (palette: Color[]) => {
   triggerDownload(html, 'color-palette-generator.html', 'text/html');
 };
 
-export const exportAsPdf = (palette: Color[]) => {
+export const exportAsPdf = async (palette: Color[]) => {
   try {
+      const { jsPDF } = await import('jspdf');
       const doc = new jsPDF();
       doc.setFontSize(24);
       doc.text("Color Palette Generator", 20, 20);

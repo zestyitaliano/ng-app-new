@@ -7,6 +7,7 @@ import { toolMeta as imageConverter } from "./image-converter/meta";
 import { toolMeta as campaignUrlArchitect } from "./campaign-url-architect/meta";
 import { toolMeta as colorPicker } from "./color-picker/meta";
 import { toolMeta as colorPaletteGenerator } from "./color-palette-generator/meta";
+import { toolMeta as dictate } from "./dictate/meta";
 import { toolMeta as fontConverter } from "./font-converter/meta";
 import { toolMeta as imageCompressor } from "./image-compressor/meta";
 import { toolMeta as imageExtractor } from "./image-extractor/meta";
@@ -84,6 +85,11 @@ const FontConverterTool = lazyTool(
   "FontConverterTool",
 );
 
+const DictateTool = lazyTool(
+  () => import("./dictate/DictateTool"),
+  "DictateTool",
+);
+
 const ImageCompressorTool = lazyTool(
   () => import("./image-compressor/ImageCompressorTool"),
   "ImageCompressorTool",
@@ -130,6 +136,7 @@ export const TOOLS: ToolDefinition[] = [
   { meta: caseConverter, Component: CaseConverterTool },
   { meta: colorPicker, Component: ColorPickerTool },
   { meta: colorPaletteGenerator, Component: ColorPaletteGeneratorTool },
+  { meta: dictate, Component: DictateTool },
   { meta: fontConverter, Component: FontConverterTool },
   { meta: imageCompressor, Component: ImageCompressorTool },
   { meta: imageExtractor, Component: ImageExtractorTool },

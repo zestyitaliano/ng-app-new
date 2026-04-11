@@ -2,7 +2,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Color } from '../types';
 import tinycolor from 'tinycolor2';
-import { motion } from 'framer-motion';
 import { LockIcon, UnlockIcon, CopyIcon, TargetIcon, ColorPickerIcon, InfoIcon } from './icons/Icons';
 
 interface ColorSwatchProps {
@@ -145,9 +144,7 @@ const ColorSwatch: React.FC<ColorSwatchProps> = ({
     : '';
 
   return (
-    <motion.div
-      layout={enableLayout && !isTransitioning}
-      initial={false}
+    <div
       draggable="true"
       onDragStart={handleDragStartInternal as any}
       onDragEnter={() => onDragEnter(index)}
@@ -155,32 +152,19 @@ const ColorSwatch: React.FC<ColorSwatchProps> = ({
       onClick={onClick}
       className={`
         select-none flex-1 basis-0 min-w-0 flex flex-col justify-between items-center p-4 py-6 relative cursor-pointer active:cursor-grabbing focus:outline-none group 
-        transition-[background-color,box-shadow,opacity,color] duration-200 ease-out
+        transition-[background-color,box-shadow,opacity,color,transform] duration-200 ease-out
         ${selectedClasses}
+        ${isDragging ? 'scale-[1.08] z-[100]' : isSelected ? 'scale-[1.02] z-30' : 'scale-100 z-[1]'}
+        ${!isDragging && isSelected ? 'hover:scale-[1.03] hover:z-40' : ''}
+        ${!isDragging && !isSelected ? 'hover:scale-105 hover:z-40' : ''}
       `}
-      
-      // Motion Animate: Handles Base, Dragging, and Selected states
-      animate={{
+      style={{
         backgroundColor: color.hex,
-        scale: isDragging ? 1.08 : (isSelected ? 1.02 : 1),
-        zIndex: isDragging ? 100 : (isSelected ? 30 : 1),
-        boxShadow: isDragging 
-            ? "0 35px 60px -15px rgba(0, 0, 0, 0.3)" // Deep shadow when lifted
-            : (isSelected 
-                ? "0 20px 25px -5px rgba(0, 0, 0, 0.1)" 
-                : "0 0 0 0 rgba(0,0,0,0)")
-      }}
-
-      // Motion Hover: Only apply hover effects if not dragging
-      whileHover={!isDragging ? { 
-        scale: isSelected ? 1.03 : 1.05, 
-        zIndex: 40,
-        boxShadow: "0 20px 30px -10px rgba(0, 0, 0, 0.2), 0 10px 15px -5px rgba(0, 0, 0, 0.1)"
-      } : {}}
-      
-      transition={{
-          duration: 0.2,
-          ease: "easeInOut"
+        boxShadow: isDragging
+          ? '0 35px 60px -15px rgba(0, 0, 0, 0.3)'
+          : isSelected
+            ? '0 20px 25px -5px rgba(0, 0, 0, 0.1)'
+            : '0 0 0 0 rgba(0,0,0,0)',
       }}
     >
         {/* Base Color Marker */}
@@ -261,7 +245,7 @@ const ColorSwatch: React.FC<ColorSwatchProps> = ({
         </div>
         {copied && <span className="absolute bottom-20 bg-gray-900 text-white text-xs px-2 py-1 shadow-lg pointer-events-none">Copied!</span>}
       </div>
-    </motion.div>
+    </div>
   );
 };
 

@@ -1,0 +1,10 @@
+{
+  "slug": "sitemap-robots-explorer",
+  "route": "/tools/sitemap-robots-explorer",
+  "shell": "lite_header",
+  "priority": "high",
+  "simplification": "keep_lite_header",
+  "consoleErrors": [],
+  "pageErrors": [],
+  "failedRequests": []
+}

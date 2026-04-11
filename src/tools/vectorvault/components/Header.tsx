@@ -9,7 +9,7 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ onOpenUpload, filters, setFilters }) => {
   return (
-    <header className="h-20 border-b border-gray-200 bg-white flex items-center justify-between px-8 sticky top-0 z-20">
+    <header className="h-20 border-b border-gray-200 bg-white flex items-center justify-between px-8 sticky top-[75px] z-20">
       <div className="flex items-center gap-4">
         <div className="w-10 h-10 bg-primary-500 flex items-center justify-center shadow-md shadow-primary-500/20 rounded-none">
           <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>

@@ -1,12 +1,12 @@
-import React, { useMemo, useState } from "react";
-import { FontFile, ConvertedFont } from "../types";
+import React from "react";
 import { Download } from "lucide-react";
+
+import type { ConvertedFont, FontFile } from "../types";
 
 type Props = {
   uploadedFonts: FontFile[];
   convertedFonts: ConvertedFont[];
-  previewText: string;
-  onPreviewTextChange: (text: string) => void;
+  targetFormat: string;
   onDownloadOne: (font: ConvertedFont) => void;
   onDownloadZip: () => void;
   isBusy?: boolean;
@@ -15,101 +15,122 @@ type Props = {
 export default function FontPreview({
   uploadedFonts,
   convertedFonts,
-  previewText,
-  onPreviewTextChange,
+  targetFormat,
   onDownloadOne,
   onDownloadZip,
   isBusy,
 }: Props) {
-  const [search, setSearch] = useState("");
-
-  const filtered = useMemo(() => {
-    const q = search.trim().toLowerCase();
-    if (!q) return convertedFonts;
-    return convertedFonts.filter((f) =>
-      (f.originalName || "").toLowerCase().includes(q)
-    );
-  }, [convertedFonts, search]);
-
   return (
     <div className="space-y-6">
-      <div className="bg-white border border-slate-200 p-6">
+      <div className="border border-slate-200 bg-white p-6">
         <h2 className="text-sm font-black uppercase tracking-widest text-slate-900">
-          Preview
+          Batch Summary
         </h2>
 
-        <div className="mt-4 grid grid-cols-1 lg:grid-cols-3 gap-4">
-          <div className="lg:col-span-2">
-            <label className="block text-xs font-black uppercase tracking-widest text-slate-500 mb-2">
-              Preview Text
-            </label>
-            <textarea
-              value={previewText}
-              onChange={(e) => onPreviewTextChange(e.target.value)}
-              className="w-full h-28 p-4 border-2 border-slate-200 bg-white focus:border-slate-900 focus:outline-none"
-              spellCheck={false}
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs font-black uppercase tracking-widest text-slate-500 mb-2">
-              Search
-            </label>
-            <input
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full p-3 border-2 border-slate-200 bg-white focus:border-slate-900 focus:outline-none"
-              placeholder="Filter by filename…"
-            />
-
-            <div className="mt-4 flex gap-2">
-              <button
-                onClick={onDownloadZip}
-                disabled={isBusy || convertedFonts.length === 0}
-                className="w-full bg-slate-900 text-white px-4 py-3 text-xs font-black uppercase tracking-widest disabled:opacity-50"
-              >
-                Download ZIP
-              </button>
+        <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-3">
+          <div className="border border-slate-200 p-4">
+            <div className="text-xs font-black uppercase tracking-widest text-slate-500">
+              Uploaded
             </div>
-
-            <div className="mt-3 text-xs text-slate-500">
-              Uploaded: <span className="font-bold">{uploadedFonts.length}</span> • Converted:{" "}
-              <span className="font-bold">{convertedFonts.length}</span>
+            <div className="mt-2 text-2xl font-black text-slate-900">
+              {uploadedFonts.length}
+            </div>
+          </div>
+          <div className="border border-slate-200 p-4">
+            <div className="text-xs font-black uppercase tracking-widest text-slate-500">
+              Converted
+            </div>
+            <div className="mt-2 text-2xl font-black text-slate-900">
+              {convertedFonts.length}
+            </div>
+          </div>
+          <div className="border border-slate-200 p-4">
+            <div className="text-xs font-black uppercase tracking-widest text-slate-500">
+              Output Format
+            </div>
+            <div className="mt-2 text-2xl font-black text-slate-900">
+              {targetFormat.toUpperCase()}
             </div>
           </div>
         </div>
+
+        <p className="mt-4 text-sm text-slate-600">
+          This simplified version focuses on stable batch conversion and downloads,
+          rather than in-app font previewing.
+        </p>
       </div>
 
-      <div className="bg-white border border-slate-200 p-6">
+      <div className="border border-slate-200 bg-white p-6">
         <h2 className="text-sm font-black uppercase tracking-widest text-slate-900">
-          Converted Fonts
+          Uploaded Files
         </h2>
 
-        {filtered.length === 0 ? (
-          <p className="text-sm text-slate-500 mt-4">No converted fonts yet.</p>
+        {uploadedFonts.length === 0 ? (
+          <p className="mt-4 text-sm text-slate-500">
+            No fonts uploaded yet.
+          </p>
         ) : (
           <div className="mt-4 space-y-3">
-            {filtered.map((f) => (
+            {uploadedFonts.map((font) => (
               <div
-                key={f.id}
+                key={font.id}
                 className="flex items-center justify-between gap-4 border border-slate-200 p-4"
               >
                 <div className="min-w-0 flex-1">
-                  <div className="text-sm font-black text-slate-900 truncate">
-                    {f.originalName}
+                  <div className="truncate text-sm font-black text-slate-900">
+                    {font.file.name}
                   </div>
-                  <div className="text-xs uppercase tracking-widest text-slate-500 mt-1">
-                    {f.format} • {f.filename}
+                  <div className="mt-1 text-xs uppercase tracking-widest text-slate-500">
+                    {(font.file.size / 1024).toFixed(1)} KB
                   </div>
-                  <div className="mt-3 text-xl text-slate-900 break-words">
-                    {previewText}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div className="border border-slate-200 bg-white p-6">
+        <div className="flex items-center justify-between gap-4">
+          <h2 className="text-sm font-black uppercase tracking-widest text-slate-900">
+            Converted Files
+          </h2>
+          <button
+            type="button"
+            onClick={onDownloadZip}
+            disabled={isBusy || convertedFonts.length === 0}
+            className="inline-flex items-center gap-2 bg-slate-900 px-4 py-3 text-xs font-black uppercase tracking-widest text-white disabled:opacity-50"
+          >
+            <Download size={14} />
+            Download ZIP
+          </button>
+        </div>
+
+        {convertedFonts.length === 0 ? (
+          <p className="mt-4 text-sm text-slate-500">
+            Convert your uploaded files to generate downloads.
+          </p>
+        ) : (
+          <div className="mt-4 space-y-3">
+            {convertedFonts.map((font) => (
+              <div
+                key={font.id}
+                className="flex items-center justify-between gap-4 border border-slate-200 p-4"
+              >
+                <div className="min-w-0 flex-1">
+                  <div className="truncate text-sm font-black text-slate-900">
+                    {font.originalName}
+                  </div>
+                  <div className="mt-1 text-xs uppercase tracking-widest text-slate-500">
+                    {font.format.toUpperCase()} | {font.filename}
                   </div>
                 </div>
 
                 <button
-                  onClick={() => onDownloadOne(f)}
+                  type="button"
+                  onClick={() => onDownloadOne(font)}
                   disabled={isBusy}
-                  className="shrink-0 inline-flex items-center gap-2 bg-slate-900 text-white px-4 py-3 text-xs font-black uppercase tracking-widest disabled:opacity-50"
+                  className="inline-flex shrink-0 items-center gap-2 bg-slate-900 px-4 py-3 text-xs font-black uppercase tracking-widest text-white disabled:opacity-50"
                 >
                   <Download size={14} />
                   Download

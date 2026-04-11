@@ -1,0 +1,10 @@
+{
+  "slug": "case-converter",
+  "route": "/tools/case-converter",
+  "shell": "full_layout",
+  "priority": "high",
+  "simplification": "keep",
+  "consoleErrors": [],
+  "pageErrors": [],
+  "failedRequests": []
+}

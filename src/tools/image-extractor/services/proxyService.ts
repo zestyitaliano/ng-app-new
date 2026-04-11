@@ -9,7 +9,7 @@ export async function fetchPageHtmlViaProxy(input: string): Promise<string> {
       return await response.text();
     }
   } catch {
-    // Fall through to proxy attempt.
+    // Fall through to the proxy attempt.
   }
 
   const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;

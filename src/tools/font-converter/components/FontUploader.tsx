@@ -22,7 +22,7 @@ export default function FontUploader({
             Upload Fonts
           </h2>
           <p className="text-sm text-slate-600 mt-1">
-            Upload .ttf, .otf, .woff, .woff2 (if enabled), or .eot
+            Upload TTF, OTF, WOFF, or EOT files for batch conversion.
           </p>
         </div>
 
@@ -52,7 +52,7 @@ export default function FontUploader({
         <input
           type="file"
           multiple
-          accept=".ttf,.otf,.woff,.woff2,.eot"
+          accept=".ttf,.otf,.woff,.eot"
           className="hidden"
           onChange={(e) => {
             if (e.target.files && e.target.files.length > 0) {

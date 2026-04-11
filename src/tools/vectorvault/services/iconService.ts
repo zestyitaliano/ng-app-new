@@ -1,6 +1,8 @@
 import { IconData } from '../types';
 
 const STORAGE_KEY = 'vectorvault_icons_v2';
+const MAP_PIN_PATH =
+  'M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z';
 
 // Pre-populated high quality icons (Filled/Solid style)
 const DEFAULT_ICONS: IconData[] = [
@@ -71,7 +73,7 @@ const DEFAULT_ICONS: IconData[] = [
     id: '10',
     name: 'Map Pin',
     tags: ['location', 'gps', 'marker', 'place'],
-    path: ['M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5-2.5 2.5-1.12 2.5-2.5 2.5z'],
+    path: [MAP_PIN_PATH],
     defaultStyle: 'fill'
   },
   {
@@ -90,15 +92,28 @@ const DEFAULT_ICONS: IconData[] = [
   }
 ];
 
+const sanitizeIcons = (icons: IconData[]): IconData[] =>
+  icons.map((icon) => {
+    if (icon.id !== '10' && icon.name !== 'Map Pin') {
+      return icon;
+    }
+
+    return {
+      ...icon,
+      path: [MAP_PIN_PATH],
+    };
+  });
+
 class IconService {
   private icons: IconData[];
 
   constructor() {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) {
-      this.icons = JSON.parse(stored);
+      this.icons = sanitizeIcons(JSON.parse(stored));
+      this.save();
     } else {
-      this.icons = DEFAULT_ICONS;
+      this.icons = sanitizeIcons(DEFAULT_ICONS);
       this.save();
     }
   }

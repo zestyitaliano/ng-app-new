@@ -105,6 +105,11 @@ const TOOL_VISUALS: Record<string, ToolVisualConfig> = {
     fg: "#202c39",
     icon: "mic",
   },
+  "dns-checker": {
+    bg: "#1982c4",
+    fg: "#ffffff",
+    icon: "graph",
+  },
   "font-converter": {
     bg: "#ef476f",
     fg: "#ffffff",
@@ -146,6 +151,11 @@ const TOOL_VISUALS: Record<string, ToolVisualConfig> = {
     fg: "#ffffff",
     icon: "scaling",
   },
+  "redirect-analyzer": {
+    bg: "#577590",
+    fg: "#ffffff",
+    icon: "graph",
+  },
   "sitemap-robots-explorer": {
     bg: "#1982c4",
     fg: "#ffffff",
@@ -167,6 +177,8 @@ const TOOL_ORDER = [
   "image-compressor",
   "color-palette-generator",
   "vectorvault",
+  "dns-checker",
+  "redirect-analyzer",
   "sitemap-robots-explorer",
   "modular-wireframe-generator",
   "image-converter",

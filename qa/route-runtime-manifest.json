@@ -169,6 +169,32 @@
     ]
   },
   {
+    "slug": "dns-checker",
+    "title": "DNS Checker",
+    "route": "/tools/dns-checker",
+    "shell": "full_layout",
+    "priority": "high",
+    "simplification": "keep",
+    "review_focus": [
+      "domain validation and query controls",
+      "resolver status cards and empty states",
+      "shared layout, header, and footer behavior"
+    ]
+  },
+  {
+    "slug": "redirect-analyzer",
+    "title": "Redirect Analyzer",
+    "route": "/tools/redirect-analyzer",
+    "shell": "full_layout",
+    "priority": "high",
+    "simplification": "keep",
+    "review_focus": [
+      "input and loading flow",
+      "redirect chain rendering and summary cards",
+      "shared layout, header, and footer behavior"
+    ]
+  },
+  {
     "slug": "campaign-url-architect",
     "title": "Campaign URL Architect",
     "route": "/tools/campaign-url-architect",

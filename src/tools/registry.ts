@@ -8,6 +8,7 @@ import { toolMeta as campaignUrlArchitect } from "./campaign-url-architect/meta"
 import { toolMeta as colorPicker } from "./color-picker/meta";
 import { toolMeta as colorPaletteGenerator } from "./color-palette-generator/meta";
 import { toolMeta as dictate } from "./dictate/meta";
+import { toolMeta as dnsChecker } from "./dns-checker/meta";
 import { toolMeta as fontConverter } from "./font-converter/meta";
 import { toolMeta as imageCompressor } from "./image-compressor/meta";
 import { toolMeta as imageExtractor } from "./image-extractor/meta";
@@ -15,6 +16,7 @@ import { toolMeta as imageToTextGenerator } from "./image-to-text-converter/meta
 import { toolMeta as loremIpsumGenerator } from "./lorem-ipsum-generator/meta";
 import { toolMeta as modularWireframeGenerator } from "./modular-wireframe-generator/meta";
 import { toolMeta as proportionScaler } from "./proportion-scaler/meta";
+import { toolMeta as redirectAnalyzer } from "./redirect-analyzer/meta";
 import { toolMeta as sitemapRobotsExplorer } from "./sitemap-robots-explorer/meta";
 import { toolMeta as vectorVault } from "./vectorvault/meta";
 
@@ -90,6 +92,11 @@ const DictateTool = lazyTool(
   "DictateTool",
 );
 
+const DnsCheckerTool = lazyTool(
+  () => import("./dns-checker/DnsCheckerTool"),
+  "DnsCheckerTool",
+);
+
 const ImageCompressorTool = lazyTool(
   () => import("./image-compressor/ImageCompressorTool"),
   "ImageCompressorTool",
@@ -120,6 +127,11 @@ const ProportionScalerTool = lazyTool(
   "ProportionScalerTool",
 );
 
+const RedirectAnalyzerTool = lazyTool(
+  () => import("./redirect-analyzer/RedirectAnalyzerTool"),
+  "RedirectAnalyzerTool",
+);
+
 const SitemapRobotsExplorerTool = lazyTool(
   () => import("./sitemap-robots-explorer/SitemapRobotsExplorerTool"),
   "SitemapRobotsExplorerTool",
@@ -137,6 +149,7 @@ export const TOOLS: ToolDefinition[] = [
   { meta: colorPicker, Component: ColorPickerTool },
   { meta: colorPaletteGenerator, Component: ColorPaletteGeneratorTool },
   { meta: dictate, Component: DictateTool },
+  { meta: dnsChecker, Component: DnsCheckerTool },
   { meta: fontConverter, Component: FontConverterTool },
   { meta: imageCompressor, Component: ImageCompressorTool },
   { meta: imageExtractor, Component: ImageExtractorTool },
@@ -144,6 +157,7 @@ export const TOOLS: ToolDefinition[] = [
   { meta: loremIpsumGenerator, Component: LoremIpsumGeneratorTool },
   { meta: modularWireframeGenerator, Component: ModularWireframeGeneratorTool },
   { meta: proportionScaler, Component: ProportionScalerTool },
+  { meta: redirectAnalyzer, Component: RedirectAnalyzerTool },
   { meta: sitemapRobotsExplorer, Component: SitemapRobotsExplorerTool },
   { meta: vectorVault, Component: VectorVaultTool },
 ];

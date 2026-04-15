@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { FEATURED_TOOL_LINKS } from "../tools/featuredLinks";
 
 type SiteTopNavProps = {
   className?: string;
@@ -28,6 +29,15 @@ export default function SiteTopNav({ className = "" }: SiteTopNavProps) {
           <Link className="transition-colors hover:text-[#111111]" to="/tools">
             All Tools
           </Link>
+          {FEATURED_TOOL_LINKS.map((tool) => (
+            <Link
+              key={tool.slug}
+              className="hidden transition-colors hover:text-[#111111] xl:inline"
+              to={`/tools/${tool.slug}`}
+            >
+              {tool.label}
+            </Link>
+          ))}
           <Link className="transition-colors hover:text-[#111111]" to="/blog">
             Blog
           </Link>

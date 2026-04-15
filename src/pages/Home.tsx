@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import SiteFooter from "../components/SiteFooter";
 import { TOOL_CATALOG, type ToolCardIcon } from "../tools/catalog";
+import { FEATURED_TOOL_LINKS } from "../tools/featuredLinks";
 import "./home.css";
 
 type Tool = (typeof TOOL_CATALOG)[number];
@@ -202,6 +203,11 @@ export default function Home() {
         <nav className="ng-nav" aria-label="Primary">
           <a href="#tools">Tools</a>
           <a href="#system">System</a>
+          {FEATURED_TOOL_LINKS.map((tool) => (
+            <Link key={tool.slug} to={`/tools/${tool.slug}`}>
+              {tool.label}
+            </Link>
+          ))}
           <a href="/blog">Blog</a>
         </nav>
 
